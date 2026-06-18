@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Urban Property Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">GTLIA20900 - Asset Management</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/menu">Menu</a>
+                <a class="nav-link" href="/assets">Assets</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 th:text="${title}">Urban Property Detail</h2>
+
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Header Information</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>Year:</strong>
+                        <p th:text="${property.presentationYear}"></p>
+                    </div>
+                    <div class="col-md-2">
+                        <strong>Tax Type:</strong>
+                        <p th:text="${property.taxType}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Presentation:</strong>
+                        <p th:text="${property.presentationCode}"></p>
+                    </div>
+                    <div class="col-md-2">
+                        <strong>Asset Seq:</strong>
+                        <p th:text="${property.assetSequence}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Transmission %:</strong>
+                        <p th:text="${property.transmissionPercentage} + '%'"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Location</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Province:</strong>
+                        <p th:text="${property.provinceCode} + ' - ' + ${property.provinceDescription}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Municipality:</strong>
+                        <p th:text="${property.municipalityCode} + ' - ' + ${property.municipalityDescription}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Street Type:</strong>
+                        <p th:text="${property.streetType}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Street Name:</strong>
+                        <p th:text="${property.streetName}"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <strong>Number:</strong>
+                        <p th:text="${property.streetNumber}"></p>
+                    </div>
+                    <div class="col-md-2">
+                        <strong>Postal Code:</strong>
+                        <p th:text="${property.postalCode}"></p>
+                    </div>
+                    <div class="col-md-2">
+                        <strong>Staircase:</strong>
+                        <p th:text="${property.staircase}"></p>
+                    </div>
+                    <div class="col-md-2">
+                        <strong>Floor:</strong>
+                        <p th:text="${property.floor}"></p>
+                    </div>
+                    <div class="col-md-2">
+                        <strong>Door:</strong>
+                        <p th:text="${property.door}"></p>
+                    </div>
+                    <div class="col-md-2">
+                        <strong>Country:</strong>
+                        <p th:text="${property.country}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5 class="mb-0">Property Details</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Cadastral Reference:</strong>
+                        <p th:text="${property.cadastralReference}"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Property Type:</strong>
+                        <p th:text="${property.propertyType} + ' - ' + ${property.propertyTypeDescription}"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Situation:</strong>
+                        <p th:text="${property.situationCode} + ' - ' + ${property.situationDescription}"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Habitual Residence:</strong>
+                        <p th:text="${property.isHabitualResidence == 'S' ? 'Yes' : 'No'}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Residence Value:</strong>
+                        <p th:text="${#numbers.formatDecimal(property.habitualResidenceValue, 1, 'COMMA', 2, 'POINT')}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Number of Units:</strong>
+                        <p th:text="${property.numberOfUnits}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Surface Area:</strong>
+                        <p th:text="${#numbers.formatDecimal(property.surfaceArea, 1, 'COMMA', 2, 'POINT')} + ' m²'"></p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <strong>Construction Year:</strong>
+                        <p th:text="${property.constructionYear}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Is Rented:</strong>
+                        <p th:text="${property.isRented == 'S' ? 'Yes' : 'No'}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Rental Contract Year:</strong>
+                        <p th:text="${property.rentalContractYear}"></p>
+                    </div>
+                    <div class="col-md-3">
+                        <strong>Official Protection:</strong>
+                        <p th:text="${property.isOfficialProtection == 'S' ? 'Yes' : 'No'}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Valuation</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        <strong>Declared Amount:</strong>
+                        <p class="h5" th:text="${#numbers.formatDecimal(property.declaredAmount, 1, 'COMMA', 2, 'POINT')} + ' €'"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Verified Amount:</strong>
+                        <p class="h5" th:text="${#numbers.formatDecimal(property.verifiedAmount, 1, 'COMMA', 2, 'POINT')} + ' €'"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Proportional Verified:</strong>
+                        <p class="h5" th:text="${#numbers.formatDecimal(property.proportionalVerifiedAmount, 1, 'COMMA', 2, 'POINT')} + ' €'"></p>
+                    </div>
+                </div>
+                <div class="row" th:if="${property.referenceValue != null}">
+                    <div class="col-md-4">
+                        <strong>Reference Value:</strong>
+                        <p th:text="${#numbers.formatDecimal(property.referenceValue, 1, 'COMMA', 2, 'POINT')} + ' €'"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Has Reference Value:</strong>
+                        <p th:text="${property.hasReferenceValue == 'S' ? 'Yes' : 'No'}"></p>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Reference Value Valid:</strong>
+                        <p th:text="${property.referenceValueValid == 'S' ? 'Yes' : 'No'}"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card mb-4" th:if="${property.observations != null and !property.observations.isEmpty()}">
+            <div class="card-header">
+                <h5 class="mb-0">Observations</h5>
+            </div>
+            <div class="card-body">
+                <p th:text="${property.observations}"></p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a th:href="@{/assets(presentationYear=${property.presentationYear},taxType=${property.taxType},presentationCode=${property.presentationCode})}" 
+               class="btn btn-secondary">Back to List</a>
+            <div>
+                <a th:href="@{/urban-properties/edit/{seq}(seq=${property.assetSequence},presentationYear=${property.presentationYear},taxType=${property.taxType},presentationCode=${property.presentationCode})}" 
+                   class="btn btn-warning">Edit</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
