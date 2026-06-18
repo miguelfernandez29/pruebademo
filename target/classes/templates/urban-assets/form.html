@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Urban Property Form</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">GTLIA20900</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/menu">Menu</a>
+                <a class="nav-link" href="/assets">Assets</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2 th:text="${title}">Urban Property Form</h2>
+
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <form th:action="@{/urban-assets/{action}(action=${action})}" th:object="${urbanAsset}" method="post">
+            <input type="hidden" th:field="*{presentationYear}">
+            <input type="hidden" th:field="*{taxType}">
+            <input type="hidden" th:field="*{presentationCode}">
+            <input type="hidden" th:field="*{assetSequence}">
+            <input type="hidden" th:field="*{assetNature}">
+
+            <div class="card mb-4">
+                <div class="card-header">Header Information</div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <label class="form-label">Year</label>
+                            <input type="text" class="form-control" th:value="*{presentationYear}" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Tax Type</label>
+                            <input type="text" class="form-control" th:value="*{taxType}" readonly>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Presentation Code</label>
+                            <input type="text" class="form-control" th:value="*{presentationCode}" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Sequence</label>
+                            <input type="text" class="form-control" th:value="*{assetSequence}" readonly>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Nature</label>
+                            <input type="text" class="form-control" value="Urbano" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">Location</div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Province *</label>
+                            <select class="form-select" th:field="*{provinceCode}" required>
+                                <option value="">Select...</option>
+                                <option th:each="province : ${provinces}" th:value="${province.code}" th:text="${province.name}"></option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Municipality Code *</label>
+                            <input type="text" class="form-control" th:field="*{municipalityCode}" required maxlength="3">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Street Type</label>
+                            <input type="text" class="form-control" th:field="*{streetType}" maxlength="2">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Street Name</label>
+                            <input type="text" class="form-control" th:field="*{streetName}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Number</label>
+                            <input type="text" class="form-control" th:field="*{streetNumber}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Postal Code</label>
+                            <input type="text" class="form-control" th:field="*{postalCode}" maxlength="5">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Staircase</label>
+                            <input type="text" class="form-control" th:field="*{staircase}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Floor</label>
+                            <input type="text" class="form-control" th:field="*{floor}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Door</label>
+                            <input type="text" class="form-control" th:field="*{door}">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Country</label>
+                            <select class="form-select" th:field="*{countryCode}">
+                                <option th:each="country : ${countries}" th:value="${country.code}" th:text="${country.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">Cadastral Information</div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Cadastral Reference</label>
+                            <input type="text" class="form-control" th:field="*{cadastralReference}" maxlength="20">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Property Type *</label>
+                            <input type="text" class="form-control" th:field="*{propertyType}" required maxlength="2">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Habitual Residence</label>
+                            <select class="form-select" th:field="*{habitualResidence}">
+                                <option value="N">No</option>
+                                <option value="S">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Habitual Res. Value</label>
+                            <input type="number" class="form-control" th:field="*{habitualResidenceValue}" step="0.01">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Units</label>
+                            <input type="number" class="form-control" th:field="*{numberOfUnits}">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Surface Area (m²)</label>
+                            <input type="number" class="form-control" th:field="*{surfaceArea}" step="0.01">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Construction Year</label>
+                            <input type="number" class="form-control" th:field="*{constructionYear}" min="1500">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Situation</label>
+                            <input type="text" class="form-control" th:field="*{situationCode}" maxlength="2">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Asset Position</label>
+                            <select class="form-select" th:field="*{assetPosition}">
+                                <option value="P">Pleno Dominio</option>
+                                <option value="G">Ganancial</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">Rental Information</div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-2">
+                            <label class="form-label">Is Rented</label>
+                            <select class="form-select" th:field="*{isRented}">
+                                <option value="">-</option>
+                                <option value="N">No</option>
+                                <option value="S">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Contract Year</label>
+                            <input type="number" class="form-control" th:field="*{rentalContractYear}" min="1500">
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Official Protection</label>
+                            <select class="form-select" th:field="*{officialProtection}">
+                                <option value="">-</option>
+                                <option value="N">No</option>
+                                <option value="S">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <label class="form-label">Disqualified</label>
+                            <select class="form-select" th:field="*{disqualified}">
+                                <option value="">-</option>
+                                <option value="N">No</option>
+                                <option value="S">Yes</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Max Sale Price</label>
+                            <input type="number" class="form-control" th:field="*{maximumSalePrice}" step="0.01">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">Valuation</div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <label class="form-label">Transmission %</label>
+                            <input type="number" class="form-control" th:field="*{transmissionPercentage}" step="0.01" min="0.01" max="100">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Declared Value *</label>
+                            <input type="number" class="form-control" th:field="*{declaredValue}" step="0.01" required>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Verified Value</label>
+                            <input type="number" class="form-control" th:field="*{verifiedValue}" step="0.01">
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Proportional Value</label>
+                            <input type="number" class="form-control" th:field="*{proportionalVerifiedValue}" step="0.01" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Has Reference Value</label>
+                            <input type="text" class="form-control" th:field="*{hasReferenceValue}" readonly>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="form-label">Reference Value</label>
+                            <input type="number" class="form-control" th:field="*{reference

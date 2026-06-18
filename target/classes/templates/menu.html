@@ -9,7 +9,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">GTLIA20900 - Asset Management</a>
+            <a class="navbar-brand" href="/">GTLIA20900</a>
             <div class="navbar-nav">
                 <a class="nav-link active" href="/menu">Menu</a>
                 <a class="nav-link" href="/assets">Assets</a>
@@ -20,60 +20,25 @@
 
     <div class="container mt-4">
         <h2>Main Menu</h2>
-        <div class="row mt-4">
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header bg-primary text-white">
-                        <h5 class="mb-0">Asset Management</h5>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <a href="/assets" class="list-group-item list-group-item-action">View All Assets</a>
-                        <a href="/assets?presentationYear=2024&taxType=01&presentationCode=00000000000001" 
-                           class="list-group-item list-group-item-action">Sample Document Assets</a>
-                    </div>
+        <div class="list-group mt-4">
+            <a href="/assets" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Asset Verification List</h5>
                 </div>
-            </div>
-            <div class="col-md-6">
-                <div class="card mb-3">
-                    <div class="card-header bg-success text-white">
-                        <h5 class="mb-0">Quick Actions</h5>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <a href="/assets/new?presentationYear=2024&taxType=01&presentationCode=00000000000001" 
-                           class="list-group-item list-group-item-action">Add New Asset</a>
-                        <a href="/swagger-ui.html" class="list-group-item list-group-item-action">API Documentation</a>
-                        <a href="/h2-console" class="list-group-item list-group-item-action">Database Console</a>
-                    </div>
+                <p class="mb-1">View and manage assets for tax declarations</p>
+            </a>
+            <a href="/swagger-ui.html" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">API Documentation</h5>
                 </div>
-            </div>
-        </div>
-        
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="mb-0">Search Document</h5>
-            </div>
-            <div class="card-body">
-                <form action="/assets" method="get" class="row g-3">
-                    <div class="col-md-3">
-                        <label for="presentationYear" class="form-label">Presentation Year</label>
-                        <input type="text" class="form-control" id="presentationYear" name="presentationYear" 
-                               placeholder="2024" maxlength="4">
-                    </div>
-                    <div class="col-md-3">
-                        <label for="taxType" class="form-label">Tax Type</label>
-                        <input type="text" class="form-control" id="taxType" name="taxType" 
-                               placeholder="01" maxlength="2">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="presentationCode" class="form-label">Presentation Code</label>
-                        <input type="text" class="form-control" id="presentationCode" name="presentationCode" 
-                               placeholder="00000000000001" maxlength="14">
-                    </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary w-100">Search</button>
-                    </div>
-                </form>
-            </div>
+                <p class="mb-1">View REST API documentation with Swagger UI</p>
+            </a>
+            <a href="/h2-console" class="list-group-item list-group-item-action">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Database Console</h5>
+                </div>
+                <p class="mb-1">Access H2 database console</p>
+            </a>
         </div>
     </div>
 
