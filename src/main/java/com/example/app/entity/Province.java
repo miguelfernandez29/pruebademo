@@ -1,34 +1,37 @@
 package com.example.app.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Column;
 
 @Entity
 @Table(name = "SUCA_PROVINCIA")
 public class Province {
 
     @Id
-    @Column(name = "CDPROV", length = 2)
-    private String code;
+    @Column(name = "CDPROVINCI", length = 2)
+    private String provinceCode;
 
-    @Column(name = "DSPROV", length = 100)
-    private String name;
+    @Column(name = "DSPROVINCI", length = 100)
+    private String provinceName;
 
     public Province() {
     }
 
-    public String getCode() {
-        return code;
+    public String getProvinceCode() {
+        return provinceCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
     }
 
-    public String getName() {
-        return name;
+    public String getProvinceName() {
+        return provinceName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
     }
 }

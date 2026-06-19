@@ -1,33 +1,29 @@
 package com.example.app.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "SUCA_MUNICIPIO")
+@IdClass(Municipality.MunicipalityId.class)
 public class Municipality {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "CDPROV", length = 2)
+    @Column(name = "CDPROVINCI", length = 2)
     private String provinceCode;
 
-    @Column(name = "CDMUNI", length = 3)
-    private String code;
+    @Id
+    @Column(name = "CDMUNICIPI", length = 3)
+    private String municipalityCode;
 
-    @Column(name = "DSMUNI", length = 100)
-    private String name;
+    @Column(name = "DSMUNICIPI", length = 100)
+    private String municipalityName;
 
     public Municipality() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getProvinceCode() {
@@ -38,19 +34,59 @@ public class Municipality {
         this.provinceCode = provinceCode;
     }
 
-    public String getCode() {
-        return code;
+    public String getMunicipalityCode() {
+        return municipalityCode;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setMunicipalityCode(String municipalityCode) {
+        this.municipalityCode = municipalityCode;
     }
 
-    public String getName() {
-        return name;
+    public String getMunicipalityName() {
+        return municipalityName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setMunicipalityName(String municipalityName) {
+        this.municipalityName = municipalityName;
+    }
+
+    public static class MunicipalityId implements Serializable {
+        private String provinceCode;
+        private String municipalityCode;
+
+        public MunicipalityId() {
+        }
+
+        public String getProvinceCode() {
+            return provinceCode;
+        }
+
+        public void setProvinceCode(String provinceCode) {
+            this.provinceCode = provinceCode;
+        }
+
+        public String getMunicipalityCode() {
+            return municipalityCode;
+        }
+
+        public void setMunicipalityCode(String municipalityCode) {
+            this.municipalityCode = municipalityCode;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            MunicipalityId that = (MunicipalityId) o;
+            return provinceCode != null && provinceCode.equals(that.provinceCode) &&
+                   municipalityCode != null && municipalityCode.equals(that.municipalityCode);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = provinceCode != null ? provinceCode.hashCode() : 0;
+            result = 31 * result + (municipalityCode != null ? municipalityCode.hashCode() : 0);
+            return result;
+        }
     }
 }

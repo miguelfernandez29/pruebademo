@@ -1,11 +1,16 @@
 package com.example.app.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "GATA_BIENOTRO")
-@IdClass(AssetDocumentId.class)
+@IdClass(OtherAsset.OtherAssetId.class)
 public class OtherAsset {
 
     @Id
@@ -17,7 +22,7 @@ public class OtherAsset {
     private String taxType;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 14)
+    @Column(name = "CDPRESENTA", length = 10)
     private String presentationCode;
 
     @Id
@@ -25,13 +30,10 @@ public class OtherAsset {
     private String assetSequence;
 
     @Column(name = "DSNORMAL", length = 200)
-    private String assetDescription;
+    private String description;
 
     @Column(name = "NMUNIDADES")
     private Integer numberOfUnits;
-
-    @Column(name = "PCTRANSMIS", precision = 5, scale = 2)
-    private BigDecimal transmissionPercentage;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
     private BigDecimal declaredValue;
@@ -39,11 +41,11 @@ public class OtherAsset {
     @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
     private BigDecimal verifiedValue;
 
+    @Column(name = "PCTRANSMIS", precision = 5, scale = 2)
+    private BigDecimal transmissionPercentage;
+
     @Column(name = "TLOBSERVAC", length = 500)
     private String observations;
-
-    @Column(name = "CDPOSBIEN2", length = 1)
-    private String assetPosition;
 
     public OtherAsset() {
     }
@@ -80,12 +82,12 @@ public class OtherAsset {
         this.assetSequence = assetSequence;
     }
 
-    public String getAssetDescription() {
-        return assetDescription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setAssetDescription(String assetDescription) {
-        this.assetDescription = assetDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public Integer getNumberOfUnits() {
@@ -94,14 +96,6 @@ public class OtherAsset {
 
     public void setNumberOfUnits(Integer numberOfUnits) {
         this.numberOfUnits = numberOfUnits;
-    }
-
-    public BigDecimal getTransmissionPercentage() {
-        return transmissionPercentage;
-    }
-
-    public void setTransmissionPercentage(BigDecimal transmissionPercentage) {
-        this.transmissionPercentage = transmissionPercentage;
     }
 
     public BigDecimal getDeclaredValue() {
@@ -120,6 +114,14 @@ public class OtherAsset {
         this.verifiedValue = verifiedValue;
     }
 
+    public BigDecimal getTransmissionPercentage() {
+        return transmissionPercentage;
+    }
+
+    public void setTransmissionPercentage(BigDecimal transmissionPercentage) {
+        this.transmissionPercentage = transmissionPercentage;
+    }
+
     public String getObservations() {
         return observations;
     }
@@ -128,11 +130,65 @@ public class OtherAsset {
         this.observations = observations;
     }
 
-    public String getAssetPosition() {
-        return assetPosition;
-    }
+    public static class OtherAssetId implements Serializable {
+        private String presentationYear;
+        private String taxType;
+        private String presentationCode;
+        private String assetSequence;
 
-    public void setAssetPosition(String assetPosition) {
-        this.assetPosition = assetPosition;
+        public OtherAssetId() {
+        }
+
+        public String getPresentationYear() {
+            return presentationYear;
+        }
+
+        public void setPresentationYear(String presentationYear) {
+            this.presentationYear = presentationYear;
+        }
+
+        public String getTaxType() {
+            return taxType;
+        }
+
+        public void setTaxType(String taxType) {
+            this.taxType = taxType;
+        }
+
+        public String getPresentationCode() {
+            return presentationCode;
+        }
+
+        public void setPresentationCode(String presentationCode) {
+            this.presentationCode = presentationCode;
+        }
+
+        public String getAssetSequence() {
+            return assetSequence;
+        }
+
+        public void setAssetSequence(String assetSequence) {
+            this.assetSequence = assetSequence;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            OtherAssetId that = (OtherAssetId) o;
+            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
+                   taxType != null && taxType.equals(that.taxType) &&
+                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
+                   assetSequence != null && assetSequence.equals(that.assetSequence);
+        }
+
+        @Override
+        public int hashCode() {
+            int result = presentationYear != null ? presentationYear.hashCode() : 0;
+            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
+            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
+            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
+            return result;
+        }
     }
 }

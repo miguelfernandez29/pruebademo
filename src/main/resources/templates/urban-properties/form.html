@@ -9,212 +9,27 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">GTLIA20900 - Asset Management</a>
+            <a class="navbar-brand" href="/">GTLIA20900</a>
             <div class="navbar-nav">
-                <a class="nav-link" href="/menu">Menu</a>
                 <a class="nav-link" href="/assets">Assets</a>
+                <a class="nav-link active" href="/urban-properties">Urban Properties</a>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
         <h2 th:text="${title}">Urban Property Form</h2>
-
-        <div th:if="${errorMessage}" class="alert alert-danger">
+        
+        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
             <span th:text="${errorMessage}"></span>
         </div>
 
-        <form th:action="@{/urban-properties/update}" th:object="${property}" method="post">
+        <form th:action="@{/urban-properties/save}" th:object="${property}" method="post">
             <input type="hidden" th:field="*{presentationYear}">
             <input type="hidden" th:field="*{taxType}">
             <input type="hidden" th:field="*{presentationCode}">
             <input type="hidden" th:field="*{assetSequence}">
+            <input type="hidden" name="action" th:value="${action}">
 
             <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Location</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label for="provinceCode" class="form-label">Province Code *</label>
-                            <input type="text" class="form-control" id="provinceCode" th:field="*{provinceCode}" 
-                                   maxlength="2" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="municipalityCode" class="form-label">Municipality Code *</label>
-                            <input type="text" class="form-control" id="municipalityCode" th:field="*{municipalityCode}" 
-                                   maxlength="3" required>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="streetType" class="form-label">Street Type</label>
-                            <input type="text" class="form-control" id="streetType" th:field="*{streetType}" maxlength="2">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="streetName" class="form-label">Street Name</label>
-                            <input type="text" class="form-control" id="streetName" th:field="*{streetName}" maxlength="100">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-2">
-                            <label for="streetNumber" class="form-label">Number</label>
-                            <input type="text" class="form-control" id="streetNumber" th:field="*{streetNumber}" maxlength="10">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="postalCode" class="form-label">Postal Code</label>
-                            <input type="text" class="form-control" id="postalCode" th:field="*{postalCode}" maxlength="5">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="staircase" class="form-label">Staircase</label>
-                            <input type="text" class="form-control" id="staircase" th:field="*{staircase}" maxlength="10">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="floor" class="form-label">Floor</label>
-                            <input type="text" class="form-control" id="floor" th:field="*{floor}" maxlength="10">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="door" class="form-label">Door</label>
-                            <input type="text" class="form-control" id="door" th:field="*{door}" maxlength="10">
-                        </div>
-                        <div class="col-md-2">
-                            <label for="country" class="form-label">Country</label>
-                            <input type="text" class="form-control" id="country" th:field="*{country}" maxlength="3" value="ESP">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Property Details</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="cadastralReference" class="form-label">Cadastral Reference</label>
-                            <input type="text" class="form-control" id="cadastralReference" th:field="*{cadastralReference}" maxlength="20">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="propertyType" class="form-label">Property Type *</label>
-                            <input type="text" class="form-control" id="propertyType" th:field="*{propertyType}" maxlength="2" required>
-                        </div>
-                        <div class="col-md-4">
-                            <label for="situationCode" class="form-label">Situation Code</label>
-                            <input type="text" class="form-control" id="situationCode" th:field="*{situationCode}" maxlength="2">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label for="isHabitualResidence" class="form-label">Habitual Residence</label>
-                            <select class="form-select" id="isHabitualResidence" th:field="*{isHabitualResidence}">
-                                <option value="">Select</option>
-                                <option value="S">Yes</option>
-                                <option value="N">No</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="habitualResidenceValue" class="form-label">Residence Value</label>
-                            <input type="number" class="form-control" id="habitualResidenceValue" 
-                                   th:field="*{habitualResidenceValue}" step="0.01" min="0">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="numberOfUnits" class="form-label">Number of Units</label>
-                            <input type="number" class="form-control" id="numberOfUnits" th:field="*{numberOfUnits}" min="1">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="surfaceArea" class="form-label">Surface Area (m²)</label>
-                            <input type="number" class="form-control" id="surfaceArea" th:field="*{surfaceArea}" step="0.01" min="0">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label for="constructionYear" class="form-label">Construction Year</label>
-                            <input type="number" class="form-control" id="constructionYear" th:field="*{constructionYear}" min="1500">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="isRented" class="form-label">Is Rented</label>
-                            <select class="form-select" id="isRented" th:field="*{isRented}">
-                                <option value="">Select</option>
-                                <option value="S">Yes</option>
-                                <option value="N">No</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="rentalContractYear" class="form-label">Rental Contract Year</label>
-                            <input type="number" class="form-control" id="rentalContractYear" th:field="*{rentalContractYear}" min="1500">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="isOfficialProtection" class="form-label">Official Protection</label>
-                            <select class="form-select" id="isOfficialProtection" th:field="*{isOfficialProtection}">
-                                <option value="">Select</option>
-                                <option value="S">Yes</option>
-                                <option value="N">No</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-3">
-                            <label for="isDisqualified" class="form-label">Disqualified</label>
-                            <select class="form-select" id="isDisqualified" th:field="*{isDisqualified}">
-                                <option value="">Select</option>
-                                <option value="S">Yes</option>
-                                <option value="N">No</option>
-                            </select>
-                        </div>
-                        <div class="col-md-3">
-                            <label for="maxSalePrice" class="form-label">Max Sale Price</label>
-                            <input type="number" class="form-control" id="maxSalePrice" th:field="*{maxSalePrice}" step="0.01" min="0">
-                        </div>
-                        <div class="col-md-3">
-                            <label for="transmissionPercentage" class="form-label">Transmission %</label>
-                            <input type="number" class="form-control" id="transmissionPercentage" 
-                                   th:field="*{transmissionPercentage}" step="0.01" min="0.01" max="100">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header bg-success text-white">
-                    <h5 class="mb-0">Valuation</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-md-4">
-                            <label for="declaredAmount" class="form-label">Declared Amount</label>
-                            <input type="number" class="form-control" id="declaredAmount" 
-                                   th:field="*{declaredAmount}" step="0.01" min="0">
-                        </div>
-                        <div class="col-md-4">
-                            <label for="verifiedAmount" class="form-label">Verified Amount</label>
-                            <input type="number" class="form-control" id="verifiedAmount" 
-                                   th:field="*{verifiedAmount}" step="0.01" min="0">
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Proportional Verified</label>
-                            <input type="text" class="form-control" th:value="${#numbers.formatDecimal(property.proportionalVerifiedAmount, 1, 'COMMA', 2, 'POINT')}" readonly>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Observations</h5>
-                </div>
-                <div class="card-body">
-                    <textarea class="form-control" id="observations" th:field="*{observations}" rows="3" maxlength="500"></textarea>
-                </div>
-            </div>
-
-            <div class="d-flex justify-content-between">
-                <a th:href="@{/urban-properties/detail/{seq}(seq=${property.assetSequence},presentationYear=${property.presentationYear},taxType=${property.taxType},presentationCode=${property.presentationCode})}" 
-                   class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </form>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+                <div class="card-header">Location Information</div>

@@ -1,66 +1,69 @@
-package com.example.app.entity;
+package com.example.app.dto;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Table;
-import javax.persistence.Column;
-import java.io.Serializable;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 import java.util.Date;
 
-@Entity
-@Table(name = "GATA_BIENVEHI")
-@IdClass(Vehicle.VehicleId.class)
-public class Vehicle {
+public class VehicleDTO {
 
-    @Id
-    @Column(name = "AAPRESENTA", length = 4)
+    @NotBlank(message = "Presentation year is required")
+    @Size(max = 4)
     private String presentationYear;
 
-    @Id
-    @Column(name = "VFTIPOIMPU", length = 2)
+    @NotBlank(message = "Tax type is required")
+    @Size(max = 2)
     private String taxType;
 
-    @Id
-    @Column(name = "CDPRESENTA", length = 10)
+    @NotBlank(message = "Presentation code is required")
+    @Size(max = 10)
     private String presentationCode;
 
-    @Id
-    @Column(name = "CDSECUBIEN", length = 3)
+    @NotBlank(message = "Asset sequence is required")
+    @Size(max = 3)
     private String assetSequence;
 
-    @Column(name = "FCMATRICUL")
     private Date registrationDate;
 
-    @Column(name = "CDVEHITIPO", length = 1)
+    @Size(max = 1)
     private String vehicleType;
 
-    @Column(name = "CDVEHIMARC", length = 5)
+    private String vehicleTypeDescription;
+
+    @Size(max = 5)
     private String vehicleBrand;
 
-    @Column(name = "CDVEHIMODE", length = 10)
+    private String vehicleBrandDescription;
+
+    @Size(max = 10)
     private String vehicleModel;
 
-    @Column(name = "NMCILINDCC")
+    private String vehicleModelDescription;
+
+    @Positive(message = "Engine displacement must be positive")
     private Integer engineDisplacement;
 
-    @Column(name = "PTDECLARAD", precision = 15, scale = 2)
+    @Positive(message = "Declared value must be positive")
     private BigDecimal declaredValue;
 
-    @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
+    @Positive(message = "Verified value must be positive")
     private BigDecimal verifiedValue;
 
-    @Column(name = "PCTITULARI", precision = 5, scale = 2)
+    @Min(value = 0, message = "Ownership percentage must be at least 0")
+    @Max(value = 100, message = "Ownership percentage cannot exceed 100")
     private BigDecimal ownershipPercentage;
 
-    @Column(name = "FCVEHICATA")
     private Date catalogDate;
 
-    @Column(name = "TLOBSERVAC", length = 500)
+    @Size(max = 500)
     private String observations;
 
-    public Vehicle() {
+    private BigDecimal calculatedVerifiedValue;
+
+    public VehicleDTO() {
     }
 
     public String getPresentationYear() {
@@ -111,6 +114,14 @@ public class Vehicle {
         this.vehicleType = vehicleType;
     }
 
+    public String getVehicleTypeDescription() {
+        return vehicleTypeDescription;
+    }
+
+    public void setVehicleTypeDescription(String vehicleTypeDescription) {
+        this.vehicleTypeDescription = vehicleTypeDescription;
+    }
+
     public String getVehicleBrand() {
         return vehicleBrand;
     }
@@ -119,12 +130,28 @@ public class Vehicle {
         this.vehicleBrand = vehicleBrand;
     }
 
+    public String getVehicleBrandDescription() {
+        return vehicleBrandDescription;
+    }
+
+    public void setVehicleBrandDescription(String vehicleBrandDescription) {
+        this.vehicleBrandDescription = vehicleBrandDescription;
+    }
+
     public String getVehicleModel() {
         return vehicleModel;
     }
 
     public void setVehicleModel(String vehicleModel) {
         this.vehicleModel = vehicleModel;
+    }
+
+    public String getVehicleModelDescription() {
+        return vehicleModelDescription;
+    }
+
+    public void setVehicleModelDescription(String vehicleModelDescription) {
+        this.vehicleModelDescription = vehicleModelDescription;
     }
 
     public Integer getEngineDisplacement() {
@@ -175,65 +202,11 @@ public class Vehicle {
         this.observations = observations;
     }
 
-    public static class VehicleId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
+    public BigDecimal getCalculatedVerifiedValue() {
+        return calculatedVerifiedValue;
+    }
 
-        public VehicleId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            VehicleId that = (VehicleId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            return result;
-        }
+    public void setCalculatedVerifiedValue(BigDecimal calculatedVerifiedValue) {
+        this.calculatedVerifiedValue = calculatedVerifiedValue;
     }
 }

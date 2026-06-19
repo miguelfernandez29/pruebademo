@@ -1,7 +1,6 @@
 package com.example.app.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Pattern;
@@ -9,7 +8,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
-public class UrbanPropertyDTO {
+public class RuralPropertyDTO {
 
     @NotBlank(message = "Presentation year is required")
     @Size(max = 4)
@@ -27,8 +26,7 @@ public class UrbanPropertyDTO {
     @Size(max = 3)
     private String assetSequence;
 
-    @NotBlank(message = "Province code is required")
-    @Size(min = 2, max = 2, message = "Province code must be 2 characters")
+    @Size(min = 2, max = 2)
     private String provinceCode;
 
     private String provinceName;
@@ -39,59 +37,35 @@ public class UrbanPropertyDTO {
     private String municipalityName;
 
     @Size(max = 5)
-    private String streetTypeCode;
-
-    @Size(max = 100)
-    private String streetName;
-
-    @Size(max = 10)
-    private String streetNumber;
-
-    @Size(max = 5)
-    @Pattern(regexp = "^[0-9]{5}$", message = "Postal code must be 5 digits")
     private String postalCode;
 
     @Size(max = 3)
     private String countryCode;
 
-    @Size(max = 20)
+    @Size(max = 25)
     private String cadastralReference;
+
+    @Size(max = 10)
+    private String polygon;
+
+    @Size(max = 10)
+    private String parcel;
+
+    @Size(max = 100)
+    private String location;
 
     @Size(max = 2)
     private String propertyType;
 
     private String propertyTypeDescription;
 
-    @Min(value = 1500, message = "Construction year must be at least 1500")
-    private Integer constructionYear;
+    @Size(max = 3)
+    private String measurementUnitType;
 
     @Size(max = 2)
-    private String situationCode;
+    private String measurementUnit;
 
-    private String situationDescription;
-
-    @Pattern(regexp = "^[SN]$", message = "Rental indicator must be S or N")
-    private String rentalIndicator;
-
-    private Integer rentalContractYear;
-
-    @Pattern(regexp = "^[SN]$", message = "Official protection indicator must be S or N")
-    private String officialProtectionIndicator;
-
-    @Pattern(regexp = "^[SN]$", message = "Disqualification indicator must be S or N")
-    private String disqualificationIndicator;
-
-    @Positive(message = "Max sale price must be positive")
-    private BigDecimal maxSalePrice;
-
-    @Pattern(regexp = "^[SN]$", message = "Habitual residence indicator must be S or N")
-    private String habitualResidenceIndicator;
-
-    @Positive(message = "Habitual residence value must be positive")
-    private BigDecimal habitualResidenceValue;
-
-    @Positive(message = "Number of units must be positive")
-    private Integer numberOfUnits;
+    private String measurementUnitDescription;
 
     @Positive(message = "Surface area must be positive")
     private BigDecimal surfaceArea;
@@ -115,9 +89,6 @@ public class UrbanPropertyDTO {
 
     private BigDecimal referenceValue;
 
-    @Pattern(regexp = "^[DT]$", message = "Duplicate indicator must be D or T")
-    private String duplicateIndicator;
-
     @Size(max = 500)
     private String observations;
 
@@ -125,7 +96,7 @@ public class UrbanPropertyDTO {
 
     private String conformityStatus;
 
-    public UrbanPropertyDTO() {
+    public RuralPropertyDTO() {
     }
 
     public String getPresentationYear() {
@@ -192,30 +163,6 @@ public class UrbanPropertyDTO {
         this.municipalityName = municipalityName;
     }
 
-    public String getStreetTypeCode() {
-        return streetTypeCode;
-    }
-
-    public void setStreetTypeCode(String streetTypeCode) {
-        this.streetTypeCode = streetTypeCode;
-    }
-
-    public String getStreetName() {
-        return streetName;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
     public String getPostalCode() {
         return postalCode;
     }
@@ -240,6 +187,30 @@ public class UrbanPropertyDTO {
         this.cadastralReference = cadastralReference;
     }
 
+    public String getPolygon() {
+        return polygon;
+    }
+
+    public void setPolygon(String polygon) {
+        this.polygon = polygon;
+    }
+
+    public String getParcel() {
+        return parcel;
+    }
+
+    public void setParcel(String parcel) {
+        this.parcel = parcel;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public String getPropertyType() {
         return propertyType;
     }
@@ -256,92 +227,28 @@ public class UrbanPropertyDTO {
         this.propertyTypeDescription = propertyTypeDescription;
     }
 
-    public Integer getConstructionYear() {
-        return constructionYear;
+    public String getMeasurementUnitType() {
+        return measurementUnitType;
     }
 
-    public void setConstructionYear(Integer constructionYear) {
-        this.constructionYear = constructionYear;
+    public void setMeasurementUnitType(String measurementUnitType) {
+        this.measurementUnitType = measurementUnitType;
     }
 
-    public String getSituationCode() {
-        return situationCode;
+    public String getMeasurementUnit() {
+        return measurementUnit;
     }
 
-    public void setSituationCode(String situationCode) {
-        this.situationCode = situationCode;
+    public void setMeasurementUnit(String measurementUnit) {
+        this.measurementUnit = measurementUnit;
     }
 
-    public String getSituationDescription() {
-        return situationDescription;
+    public String getMeasurementUnitDescription() {
+        return measurementUnitDescription;
     }
 
-    public void setSituationDescription(String situationDescription) {
-        this.situationDescription = situationDescription;
-    }
-
-    public String getRentalIndicator() {
-        return rentalIndicator;
-    }
-
-    public void setRentalIndicator(String rentalIndicator) {
-        this.rentalIndicator = rentalIndicator;
-    }
-
-    public Integer getRentalContractYear() {
-        return rentalContractYear;
-    }
-
-    public void setRentalContractYear(Integer rentalContractYear) {
-        this.rentalContractYear = rentalContractYear;
-    }
-
-    public String getOfficialProtectionIndicator() {
-        return officialProtectionIndicator;
-    }
-
-    public void setOfficialProtectionIndicator(String officialProtectionIndicator) {
-        this.officialProtectionIndicator = officialProtectionIndicator;
-    }
-
-    public String getDisqualificationIndicator() {
-        return disqualificationIndicator;
-    }
-
-    public void setDisqualificationIndicator(String disqualificationIndicator) {
-        this.disqualificationIndicator = disqualificationIndicator;
-    }
-
-    public BigDecimal getMaxSalePrice() {
-        return maxSalePrice;
-    }
-
-    public void setMaxSalePrice(BigDecimal maxSalePrice) {
-        this.maxSalePrice = maxSalePrice;
-    }
-
-    public String getHabitualResidenceIndicator() {
-        return habitualResidenceIndicator;
-    }
-
-    public void setHabitualResidenceIndicator(String habitualResidenceIndicator) {
-        this.habitualResidenceIndicator = habitualResidenceIndicator;
-    }
-
-    public BigDecimal getHabitualResidenceValue() {
-        return habitualResidenceValue;
-    }
-
-    public void setHabitualResidenceValue(BigDecimal habitualResidenceValue) {
-        this.habitualResidenceValue = habitualResidenceValue;
-    }
-
-    public Integer getNumberOfUnits() {
-        return numberOfUnits;
-    }
-
-    public void setNumberOfUnits(Integer numberOfUnits) {
-        this.numberOfUnits = numberOfUnits;
+    public void setMeasurementUnitDescription(String measurementUnitDescription) {
+        this.measurementUnitDescription = measurementUnitDescription;
     }
 
     public BigDecimal getSurfaceArea() {
@@ -406,14 +313,6 @@ public class UrbanPropertyDTO {
 
     public void setReferenceValue(BigDecimal referenceValue) {
         this.referenceValue = referenceValue;
-    }
-
-    public String getDuplicateIndicator() {
-        return duplicateIndicator;
-    }
-
-    public void setDuplicateIndicator(String duplicateIndicator) {
-        this.duplicateIndicator = duplicateIndicator;
     }
 
     public String getObservations() {

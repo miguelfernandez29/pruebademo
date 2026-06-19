@@ -9,9 +9,9 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "GATA_BIENURBA")
-@IdClass(UrbanProperty.UrbanPropertyId.class)
-public class UrbanProperty {
+@Table(name = "GATA_BIENRUST")
+@IdClass(RuralProperty.RuralPropertyId.class)
+public class RuralProperty {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
@@ -35,58 +35,34 @@ public class UrbanProperty {
     @Column(name = "CDMUNICIPI", length = 3)
     private String municipalityCode;
 
-    @Column(name = "CDTIPOVIAP", length = 5)
-    private String streetTypeCode;
-
-    @Column(name = "TLNOMBVIAP", length = 100)
-    private String streetName;
-
-    @Column(name = "TLNUMEVIAP", length = 10)
-    private String streetNumber;
-
     @Column(name = "TLCODIPOST", length = 5)
     private String postalCode;
 
     @Column(name = "CDPAIS", length = 3)
     private String countryCode;
 
-    @Column(name = "TLREFECATA", length = 20)
+    @Column(name = "TLREFECATA", length = 25)
     private String cadastralReference;
+
+    @Column(name = "TLPOLIGONO", length = 10)
+    private String polygon;
+
+    @Column(name = "TLPARCELA", length = 10)
+    private String parcel;
+
+    @Column(name = "TLPARAJE", length = 100)
+    private String location;
 
     @Column(name = "CDTIPOBIEN", length = 2)
     private String propertyType;
 
-    @Column(name = "AACONSTRUC")
-    private Integer constructionYear;
+    @Column(name = "CDUNIMEDI1", length = 3)
+    private String measurementUnitType;
 
-    @Column(name = "CDSITUACI2", length = 2)
-    private String situationCode;
+    @Column(name = "CDUNIMEDI2", length = 2)
+    private String measurementUnit;
 
-    @Column(name = "ITARRENDAM", length = 1)
-    private String rentalIndicator;
-
-    @Column(name = "AACONTARRE")
-    private Integer rentalContractYear;
-
-    @Column(name = "ITPROTOFIC", length = 1)
-    private String officialProtectionIndicator;
-
-    @Column(name = "ITDESCALIF", length = 1)
-    private String disqualificationIndicator;
-
-    @Column(name = "PTMAXVENTA", precision = 15, scale = 2)
-    private BigDecimal maxSalePrice;
-
-    @Column(name = "ITVIVIHABI", length = 1)
-    private String habitualResidenceIndicator;
-
-    @Column(name = "PTVIVIHABI", precision = 15, scale = 2)
-    private BigDecimal habitualResidenceValue;
-
-    @Column(name = "NMUNIDADES")
-    private Integer numberOfUnits;
-
-    @Column(name = "NMSUPERFIC", precision = 12, scale = 2)
+    @Column(name = "NMSUPERFIC", precision = 14, scale = 4)
     private BigDecimal surfaceArea;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
@@ -110,13 +86,10 @@ public class UrbanProperty {
     @Column(name = "PTVALORREF", precision = 15, scale = 2)
     private BigDecimal referenceValue;
 
-    @Column(name = "VFDUPLICAD", length = 1)
-    private String duplicateIndicator;
-
     @Column(name = "TLOBSERVAC", length = 500)
     private String observations;
 
-    public UrbanProperty() {
+    public RuralProperty() {
     }
 
     public String getPresentationYear() {
@@ -167,30 +140,6 @@ public class UrbanProperty {
         this.municipalityCode = municipalityCode;
     }
 
-    public String getStreetTypeCode() {
-        return streetTypeCode;
-    }
-
-    public void setStreetTypeCode(String streetTypeCode) {
-        this.streetTypeCode = streetTypeCode;
-    }
-
-    public String getStreetName() {
-        return streetName;
-    }
-
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
-    }
-
-    public String getStreetNumber() {
-        return streetNumber;
-    }
-
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
-    }
-
     public String getPostalCode() {
         return postalCode;
     }
@@ -215,6 +164,30 @@ public class UrbanProperty {
         this.cadastralReference = cadastralReference;
     }
 
+    public String getPolygon() {
+        return polygon;
+    }
+
+    public void setPolygon(String polygon) {
+        this.polygon = polygon;
+    }
+
+    public String getParcel() {
+        return parcel;
+    }
+
+    public void setParcel(String parcel) {
+        this.parcel = parcel;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
     public String getPropertyType() {
         return propertyType;
     }
@@ -223,84 +196,20 @@ public class UrbanProperty {
         this.propertyType = propertyType;
     }
 
-    public Integer getConstructionYear() {
-        return constructionYear;
+    public String getMeasurementUnitType() {
+        return measurementUnitType;
     }
 
-    public void setConstructionYear(Integer constructionYear) {
-        this.constructionYear = constructionYear;
+    public void setMeasurementUnitType(String measurementUnitType) {
+        this.measurementUnitType = measurementUnitType;
     }
 
-    public String getSituationCode() {
-        return situationCode;
+    public String getMeasurementUnit() {
+        return measurementUnit;
     }
 
-    public void setSituationCode(String situationCode) {
-        this.situationCode = situationCode;
-    }
-
-    public String getRentalIndicator() {
-        return rentalIndicator;
-    }
-
-    public void setRentalIndicator(String rentalIndicator) {
-        this.rentalIndicator = rentalIndicator;
-    }
-
-    public Integer getRentalContractYear() {
-        return rentalContractYear;
-    }
-
-    public void setRentalContractYear(Integer rentalContractYear) {
-        this.rentalContractYear = rentalContractYear;
-    }
-
-    public String getOfficialProtectionIndicator() {
-        return officialProtectionIndicator;
-    }
-
-    public void setOfficialProtectionIndicator(String officialProtectionIndicator) {
-        this.officialProtectionIndicator = officialProtectionIndicator;
-    }
-
-    public String getDisqualificationIndicator() {
-        return disqualificationIndicator;
-    }
-
-    public void setDisqualificationIndicator(String disqualificationIndicator) {
-        this.disqualificationIndicator = disqualificationIndicator;
-    }
-
-    public BigDecimal getMaxSalePrice() {
-        return maxSalePrice;
-    }
-
-    public void setMaxSalePrice(BigDecimal maxSalePrice) {
-        this.maxSalePrice = maxSalePrice;
-    }
-
-    public String getHabitualResidenceIndicator() {
-        return habitualResidenceIndicator;
-    }
-
-    public void setHabitualResidenceIndicator(String habitualResidenceIndicator) {
-        this.habitualResidenceIndicator = habitualResidenceIndicator;
-    }
-
-    public BigDecimal getHabitualResidenceValue() {
-        return habitualResidenceValue;
-    }
-
-    public void setHabitualResidenceValue(BigDecimal habitualResidenceValue) {
-        this.habitualResidenceValue = habitualResidenceValue;
-    }
-
-    public Integer getNumberOfUnits() {
-        return numberOfUnits;
-    }
-
-    public void setNumberOfUnits(Integer numberOfUnits) {
-        this.numberOfUnits = numberOfUnits;
+    public void setMeasurementUnit(String measurementUnit) {
+        this.measurementUnit = measurementUnit;
     }
 
     public BigDecimal getSurfaceArea() {
@@ -367,14 +276,6 @@ public class UrbanProperty {
         this.referenceValue = referenceValue;
     }
 
-    public String getDuplicateIndicator() {
-        return duplicateIndicator;
-    }
-
-    public void setDuplicateIndicator(String duplicateIndicator) {
-        this.duplicateIndicator = duplicateIndicator;
-    }
-
     public String getObservations() {
         return observations;
     }
@@ -383,13 +284,13 @@ public class UrbanProperty {
         this.observations = observations;
     }
 
-    public static class UrbanPropertyId implements Serializable {
+    public static class RuralPropertyId implements Serializable {
         private String presentationYear;
         private String taxType;
         private String presentationCode;
         private String assetSequence;
 
-        public UrbanPropertyId() {
+        public RuralPropertyId() {
         }
 
         public String getPresentationYear() {
@@ -428,7 +329,7 @@ public class UrbanProperty {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            UrbanPropertyId that = (UrbanPropertyId) o;
+            RuralPropertyId that = (RuralPropertyId) o;
             return presentationYear != null && presentationYear.equals(that.presentationYear) &&
                    taxType != null && taxType.equals(that.taxType) &&
                    presentationCode != null && presentationCode.equals(that.presentationCode) &&

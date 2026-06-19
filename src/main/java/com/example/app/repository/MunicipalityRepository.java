@@ -8,9 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface MunicipalityRepository extends JpaRepository<Municipality, Long> {
-
+public interface MunicipalityRepository extends JpaRepository<Municipality, Municipality.MunicipalityId> {
     List<Municipality> findByProvinceCode(String provinceCode);
-
-    Optional<Municipality> findByProvinceCodeAndCode(String provinceCode, String code);
+    Optional<Municipality> findByProvinceCodeAndMunicipalityCode(String provinceCode, String municipalityCode);
 }

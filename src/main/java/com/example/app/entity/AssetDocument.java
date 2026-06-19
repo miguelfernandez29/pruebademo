@@ -1,12 +1,17 @@
 package com.example.app.entity;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.IdClass;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "GATA_BIENDOCU")
-@IdClass(AssetDocumentId.class)
+@IdClass(AssetDocument.AssetDocumentId.class)
 public class AssetDocument {
 
     @Id
@@ -18,7 +23,7 @@ public class AssetDocument {
     private String taxType;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 14)
+    @Column(name = "CDPRESENTA", length = 10)
     private String presentationCode;
 
     @Id
@@ -28,44 +33,20 @@ public class AssetDocument {
     @Column(name = "CDNATBIEN2", length = 1)
     private String assetNature;
 
-    @Column(name = "CDPOSBIEN2", length = 1)
-    private String assetPosition;
+    @Column(name = "CDSECUACEM", length = 3)
+    private String businessAssetSequence;
 
-    @Column(name = "PCTRANSMIS", precision = 5, scale = 2)
-    private BigDecimal transmissionPercentage;
+    @Column(name = "FCCOMPROBA")
+    private Date verificationDate;
+
+    @Column(name = "IDCOMPROBA", length = 20)
+    private String verificationId;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
     private BigDecimal declaredValue;
 
     @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
     private BigDecimal verifiedValue;
-
-    @Column(name = "ITCONFORME", length = 1)
-    private String conformityIndicator;
-
-    @Column(name = "CDSITUVREF", length = 2)
-    private String referenceValueSituation;
-
-    @Column(name = "ITVALORREF", length = 1)
-    private String hasReferenceValue;
-
-    @Column(name = "PTVALORREF", precision = 15, scale = 2)
-    private BigDecimal referenceValue;
-
-    @Column(name = "FCCOMPROBA")
-    private LocalDate verificationDate;
-
-    @Column(name = "IDCOMPROBA", length = 20)
-    private String verificationId;
-
-    @Column(name = "CDSECUACEM", length = 3)
-    private String businessAssetSequence;
-
-    @Column(name = "CDTIPOBIEN", length = 2)
-    private String assetType;
-
-    @Column(name = "TLOBSERVAC", length = 500)
-    private String observations;
 
     public AssetDocument() {
     }
@@ -110,20 +91,28 @@ public class AssetDocument {
         this.assetNature = assetNature;
     }
 
-    public String getAssetPosition() {
-        return assetPosition;
+    public String getBusinessAssetSequence() {
+        return businessAssetSequence;
     }
 
-    public void setAssetPosition(String assetPosition) {
-        this.assetPosition = assetPosition;
+    public void setBusinessAssetSequence(String businessAssetSequence) {
+        this.businessAssetSequence = businessAssetSequence;
     }
 
-    public BigDecimal getTransmissionPercentage() {
-        return transmissionPercentage;
+    public Date getVerificationDate() {
+        return verificationDate;
     }
 
-    public void setTransmissionPercentage(BigDecimal transmissionPercentage) {
-        this.transmissionPercentage = transmissionPercentage;
+    public void setVerificationDate(Date verificationDate) {
+        this.verificationDate = verificationDate;
+    }
+
+    public String getVerificationId() {
+        return verificationId;
+    }
+
+    public void setVerificationId(String verificationId) {
+        this.verificationId = verificationId;
     }
 
     public BigDecimal getDeclaredValue() {
@@ -142,75 +131,65 @@ public class AssetDocument {
         this.verifiedValue = verifiedValue;
     }
 
-    public String getConformityIndicator() {
-        return conformityIndicator;
-    }
+    public static class AssetDocumentId implements Serializable {
+        private String presentationYear;
+        private String taxType;
+        private String presentationCode;
+        private String assetSequence;
 
-    public void setConformityIndicator(String conformityIndicator) {
-        this.conformityIndicator = conformityIndicator;
-    }
+        public AssetDocumentId() {
+        }
 
-    public String getReferenceValueSituation() {
-        return referenceValueSituation;
-    }
+        public String getPresentationYear() {
+            return presentationYear;
+        }
 
-    public void setReferenceValueSituation(String referenceValueSituation) {
-        this.referenceValueSituation = referenceValueSituation;
-    }
+        public void setPresentationYear(String presentationYear) {
+            this.presentationYear = presentationYear;
+        }
 
-    public String getHasReferenceValue() {
-        return hasReferenceValue;
-    }
+        public String getTaxType() {
+            return taxType;
+        }
 
-    public void setHasReferenceValue(String hasReferenceValue) {
-        this.hasReferenceValue = hasReferenceValue;
-    }
+        public void setTaxType(String taxType) {
+            this.taxType = taxType;
+        }
 
-    public BigDecimal getReferenceValue() {
-        return referenceValue;
-    }
+        public String getPresentationCode() {
+            return presentationCode;
+        }
 
-    public void setReferenceValue(BigDecimal referenceValue) {
-        this.referenceValue = referenceValue;
-    }
+        public void setPresentationCode(String presentationCode) {
+            this.presentationCode = presentationCode;
+        }
 
-    public LocalDate getVerificationDate() {
-        return verificationDate;
-    }
+        public String getAssetSequence() {
+            return assetSequence;
+        }
 
-    public void setVerificationDate(LocalDate verificationDate) {
-        this.verificationDate = verificationDate;
-    }
+        public void setAssetSequence(String assetSequence) {
+            this.assetSequence = assetSequence;
+        }
 
-    public String getVerificationId() {
-        return verificationId;
-    }
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            AssetDocumentId that = (AssetDocumentId) o;
+            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
+                   taxType != null && taxType.equals(that.taxType) &&
+                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
+                   assetSequence != null && assetSequence.equals(that.assetSequence);
+        }
 
-    public void setVerificationId(String verificationId) {
-        this.verificationId = verificationId;
-    }
-
-    public String getBusinessAssetSequence() {
-        return businessAssetSequence;
-    }
-
-    public void setBusinessAssetSequence(String businessAssetSequence) {
-        this.businessAssetSequence = businessAssetSequence;
-    }
-
-    public String getAssetType() {
-        return assetType;
-    }
-
-    public void setAssetType(String assetType) {
-        this.assetType = assetType;
-    }
-
-    public String getObservations() {
-        return observations;
-    }
-
-    public void setObservations(String observations) {
-        this.observations = observations;
+        @Override
+        public int hashCode() {
+            int result = presentationYear != null ? presentationYear.hashCode() : 0;
+            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
+            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
+            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
+            return result;
+        }
     }
 }

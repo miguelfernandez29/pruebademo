@@ -2,7 +2,6 @@ com\example\app\service\AssetCalculationService.class
 com\example\app\entity\OtherAsset.class
 com\example\app\service\UrbanAssetService.class
 com\example\app\repository\GenericDataRepository.class
-com\example\app\config\GlobalExceptionHandler.class
 com\example\app\repository\AssetDocumentRepository.class
 com\example\app\exception\GlobalExceptionHandler.class
 com\example\app\service\AssetDocumentService.class

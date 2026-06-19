@@ -1,143 +1,207 @@
 package com.example.app.service;
 
 import com.example.app.dto.UrbanPropertyDTO;
+import com.example.app.entity.AssetDocument;
 import com.example.app.entity.UrbanProperty;
-import com.example.app.entity.AssetDocumentId;
-import com.example.app.exception.ResourceNotFoundException;
-import com.example.app.exception.ValidationException;
+import com.example.app.repository.AssetDocumentRepository;
 import com.example.app.repository.UrbanPropertyRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.app.repository.ProvinceRepository;
+import com.example.app.repository.MunicipalityRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @Transactional
 public class UrbanPropertyService {
 
     private final UrbanPropertyRepository urbanPropertyRepository;
-    private final AssetValidationService validationService;
-    private final AssetCalculationService calculationService;
+    private final AssetDocumentRepository assetDocumentRepository;
+    private final ProvinceRepository provinceRepository;
+    private final MunicipalityRepository municipalityRepository;
+    private final ValidationService validationService;
+    private final ConformityService conformityService;
 
-    @Autowired
     public UrbanPropertyService(UrbanPropertyRepository urbanPropertyRepository,
-                                 AssetValidationService validationService,
-                                 AssetCalculationService calculationService) {
+                                 AssetDocumentRepository assetDocumentRepository,
+                                 ProvinceRepository provinceRepository,
+                                 MunicipalityRepository municipalityRepository,
+                                 ValidationService validationService,
+                                 ConformityService conformityService) {
         this.urbanPropertyRepository = urbanPropertyRepository;
+        this.assetDocumentRepository = assetDocumentRepository;
+        this.provinceRepository = provinceRepository;
+        this.municipalityRepository = municipalityRepository;
         this.validationService = validationService;
-        this.calculationService = calculationService;
+        this.conformityService = conformityService;
     }
 
-    public List<UrbanPropertyDTO> findByDocument(String presentationYear, String taxType, String presentationCode) {
-        List<UrbanProperty> properties = urbanPropertyRepository
-                .findByPresentationYearAndTaxTypeAndPresentationCode(presentationYear, taxType, presentationCode);
-        return properties.stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-    }
-
-    public UrbanPropertyDTO findById(String presentationYear, String taxType, 
-                                      String presentationCode, String assetSequence) {
-        AssetDocumentId id = new AssetDocumentId(presentationYear, taxType, presentationCode, assetSequence);
-        UrbanProperty property = urbanPropertyRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Urban property not found"));
-        return convertToDTO(property);
-    }
-
-    public UrbanPropertyDTO create(UrbanPropertyDTO dto) {
-        validateUrbanProperty(dto, null);
-        
-        dto.setProvinceCode(calculationService.padProvinceCode(dto.getProvinceCode()));
-        dto.setMunicipalityCode(calculationService.padMunicipalityCode(dto.getMunicipalityCode()));
-        
-        if (dto.getCountry() == null || dto.getCountry().isEmpty()) {
-            dto.setCountry("ESP");
+    public List<UrbanPropertyDTO> findAll() {
+        List<UrbanProperty> properties = urbanPropertyRepository.findAll();
+        List<UrbanPropertyDTO> dtos = new ArrayList<UrbanPropertyDTO>();
+        for (UrbanProperty property : properties) {
+            dtos.add(convertToDTO(property));
         }
+        return dtos;
+    }
+
+    public Optional<UrbanPropertyDTO> findById(String presentationYear, String taxType, 
+                                                String presentationCode, String assetSequence) {
+        return urbanPropertyRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
+                presentationYear, taxType, presentationCode, assetSequence)
+                .map(this::convertToDTO);
+    }
+
+    @Transactional
+    public UrbanPropertyDTO create(UrbanPropertyDTO dto) {
+        validateUrbanProperty(dto);
+        
+        String paddedSequence = validationService.padLeft(dto.getAssetSequence(), 3, '0');
+        dto.setAssetSequence(paddedSequence);
+        
+        String paddedProvince = validationService.padLeft(dto.getProvinceCode(), 2, '0');
+        dto.setProvinceCode(paddedProvince);
+        
+        if (dto.getMunicipalityCode() != null) {
+            String paddedMunicipality = validationService.padLeft(dto.getMunicipalityCode(), 3, '0');
+            dto.setMunicipalityCode(paddedMunicipality);
+        }
+        
+        if (dto.getCountryCode() == null || dto.getCountryCode().trim().isEmpty()) {
+            dto.setCountryCode("ESP");
+        }
+        
+        if (dto.getTransmissionPercentage() == null) {
+            dto.setTransmissionPercentage(new BigDecimal("100"));
+        }
+        
+        dto.setDeclaredValue(validationService.truncateToTwoDecimals(dto.getDeclaredValue()));
+        dto.setVerifiedValue(validationService.truncateToTwoDecimals(dto.getVerifiedValue()));
+        
+        String conformity = conformityService.calculateConformityForUrbanProperty(
+                dto.getReferenceValueIndicator(),
+                dto.getValidReferenceValueIndicator(),
+                dto.getReferenceValue(),
+                dto.getDeclaredValue(),
+                dto.getVerifiedValue());
+        dto.setConformityStatus(conformity);
+        
+        BigDecimal calculatedValue = conformityService.calculateConformingValue(
+                dto.getDeclaredValue(),
+                dto.getVerifiedValue(),
+                dto.getTransmissionPercentage(),
+                conformity,
+                2);
+        dto.setCalculatedVerifiedValue(calculatedValue);
+        
+        AssetDocument assetDoc = new AssetDocument();
+        assetDoc.setPresentationYear(dto.getPresentationYear());
+        assetDoc.setTaxType(dto.getTaxType());
+        assetDoc.setPresentationCode(dto.getPresentationCode());
+        assetDoc.setAssetSequence(dto.getAssetSequence());
+        assetDoc.setAssetNature("U");
+        assetDoc.setDeclaredValue(dto.getDeclaredValue());
+        assetDoc.setVerifiedValue(dto.getVerifiedValue());
+        assetDocumentRepository.save(assetDoc);
         
         UrbanProperty property = convertToEntity(dto);
-        property = urbanPropertyRepository.save(property);
-        return convertToDTO(property);
+        UrbanProperty saved = urbanPropertyRepository.save(property);
+        
+        return convertToDTO(saved);
     }
 
+    @Transactional
     public UrbanPropertyDTO update(UrbanPropertyDTO dto) {
-        AssetDocumentId id = new AssetDocumentId(
-                dto.getPresentationYear(), dto.getTaxType(),
-                dto.getPresentationCode(), dto.getAssetSequence());
+        validateUrbanProperty(dto);
         
-        UrbanProperty existing = urbanPropertyRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Urban property not found"));
+        UrbanProperty existing = urbanPropertyRepository
+                .findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
+                        dto.getPresentationYear(), dto.getTaxType(), 
+                        dto.getPresentationCode(), dto.getAssetSequence())
+                .orElseThrow(() -> new IllegalArgumentException("Urban property not found"));
         
-        validateUrbanProperty(dto, existing);
+        dto.setDeclaredValue(validationService.truncateToTwoDecimals(dto.getDeclaredValue()));
+        dto.setVerifiedValue(validationService.truncateToTwoDecimals(dto.getVerifiedValue()));
         
-        updateEntity(existing, dto);
-        existing = urbanPropertyRepository.save(existing);
-        return convertToDTO(existing);
+        String conformity = conformityService.calculateConformityForUrbanProperty(
+                dto.getReferenceValueIndicator(),
+                dto.getValidReferenceValueIndicator(),
+                dto.getReferenceValue(),
+                dto.getDeclaredValue(),
+                dto.getVerifiedValue());
+        dto.setConformityStatus(conformity);
+        
+        BigDecimal calculatedValue = conformityService.calculateConformingValue(
+                dto.getDeclaredValue(),
+                dto.getVerifiedValue(),
+                dto.getTransmissionPercentage(),
+                conformity,
+                2);
+        dto.setCalculatedVerifiedValue(calculatedValue);
+        
+        updateEntityFromDTO(existing, dto);
+        UrbanProperty saved = urbanPropertyRepository.save(existing);
+        
+        assetDocumentRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
+                dto.getPresentationYear(), dto.getTaxType(), 
+                dto.getPresentationCode(), dto.getAssetSequence())
+                .ifPresent(doc -> {
+                    doc.setDeclaredValue(dto.getDeclaredValue());
+                    doc.setVerifiedValue(dto.getVerifiedValue());
+                    assetDocumentRepository.save(doc);
+                });
+        
+        return convertToDTO(saved);
     }
 
+    @Transactional
     public void delete(String presentationYear, String taxType, 
                        String presentationCode, String assetSequence) {
-        AssetDocumentId id = new AssetDocumentId(presentationYear, taxType, presentationCode, assetSequence);
+        urbanPropertyRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
+                presentationYear, taxType, presentationCode, assetSequence)
+                .ifPresent(urbanPropertyRepository::delete);
         
-        if (!urbanPropertyRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Urban property not found");
+        AssetDocument.AssetDocumentId docId = new AssetDocument.AssetDocumentId();
+        docId.setPresentationYear(presentationYear);
+        docId.setTaxType(taxType);
+        docId.setPresentationCode(presentationCode);
+        docId.setAssetSequence(assetSequence);
+        assetDocumentRepository.deleteById(docId);
+    }
+
+    private void validateUrbanProperty(UrbanPropertyDTO dto) {
+        validationService.validateProvinceCode(dto.getProvinceCode());
+        validationService.validateMunicipalityCode(dto.getMunicipalityCode());
+        validationService.validatePostalCode(dto.getPostalCode(), dto.getProvinceCode());
+        validationService.validateTransmissionPercentage(dto.getTransmissionPercentage());
+        validationService.validatePositionType(dto.getPositionType());
+        validationService.validateIndicator(dto.getRentalIndicator(), "Rental indicator");
+        validationService.validateIndicator(dto.getOfficialProtectionIndicator(), "Official protection indicator");
+        validationService.validateIndicator(dto.getDisqualificationIndicator(), "Disqualification indicator");
+        validationService.validateIndicator(dto.getHabitualResidenceIndicator(), "Habitual residence indicator");
+        validationService.validateDuplicateIndicator(dto.getDuplicateIndicator());
+        validationService.validateConstructionYear(dto.getConstructionYear(), null);
+        validationService.validateMonetaryValue(dto.getDeclaredValue(), "Declared value");
+        validationService.validateMonetaryValue(dto.getVerifiedValue(), "Verified value");
+        validationService.validateMonetaryValue(dto.getMaxSalePrice(), "Max sale price");
+        validationService.validateMonetaryValue(dto.getHabitualResidenceValue(), "Habitual residence value");
+        
+        if (dto.getCadastralReference() != null && !validationService.validateCadastralReference(dto.getCadastralReference())) {
+            throw new IllegalArgumentException("Invalid cadastral reference format");
         }
         
-        urbanPropertyRepository.deleteById(id);
-    }
-
-    private void validateUrbanProperty(UrbanPropertyDTO dto, UrbanProperty existing) {
-        validationService.validateProvinceCode(dto.getProvinceCode());
-        validationService.validateMunicipalityCode(dto.getMunicipalityCode(), dto.getProvinceCode());
-        validationService.validatePostalCode(dto.getPostalCode(), dto.getProvinceCode());
-        validationService.validateCadastralReference(dto.getCadastralReference(), "U");
-        validationService.validateConstructionYear(dto.getConstructionYear(), null);
-        validationService.validateYesNoField(dto.getIsHabitualResidence(), "Habitual residence");
-        validationService.validateHabitualResidence(dto.getIsHabitualResidence(), dto.getHabitualResidenceValue());
-        validationService.validateYesNoField(dto.getIsRented(), "Is rented");
-        validationService.validateRentalContractYear(dto.getRentalContractYear(), dto.getIsRented(), null);
-        validationService.validateYesNoField(dto.getIsOfficialProtection(), "Official protection");
-        validationService.validateOfficialProtection(dto.getIsOfficialProtection(), dto.getMaxSalePrice());
-        validationService.validateYesNoField(dto.getIsDisqualified(), "Disqualified");
-        validationService.validateAmount(dto.getDeclaredAmount(), "Declared amount");
-        validationService.validateAmount(dto.getVerifiedAmount(), "Verified amount");
-        validationService.validateAmount(dto.getHabitualResidenceValue(), "Habitual residence value");
-        validationService.validateAmount(dto.getMaxSalePrice(), "Maximum sale price");
-        validationService.validateSurfaceArea(dto.getSurfaceArea());
-        validationService.validateNumberOfUnits(dto.getNumberOfUnits(), dto.getPropertyType());
-    }
-
-    private void updateEntity(UrbanProperty existing, UrbanPropertyDTO dto) {
-        existing.setProvinceCode(calculationService.padProvinceCode(dto.getProvinceCode()));
-        existing.setMunicipalityCode(calculationService.padMunicipalityCode(dto.getMunicipalityCode()));
-        existing.setStreetType(dto.getStreetType());
-        existing.setStreetName(dto.getStreetName());
-        existing.setStreetNumber(dto.getStreetNumber());
-        existing.setPostalCode(dto.getPostalCode());
-        existing.setStaircase(dto.getStaircase());
-        existing.setFloor(dto.getFloor());
-        existing.setDoor(dto.getDoor());
-        existing.setCountry(dto.getCountry() != null ? dto.getCountry() : "ESP");
-        existing.setCadastralReference(dto.getCadastralReference());
-        existing.setPropertyType(dto.getPropertyType());
-        existing.setIsHabitualResidence(dto.getIsHabitualResidence());
-        existing.setHabitualResidenceValue(dto.getHabitualResidenceValue());
-        existing.setNumberOfUnits(dto.getNumberOfUnits());
-        existing.setSurfaceArea(dto.getSurfaceArea());
-        existing.setConstructionYear(dto.getConstructionYear());
-        existing.setSituationCode(dto.getSituationCode());
-        existing.setIsRented(dto.getIsRented());
-        existing.setRentalContractYear(dto.getRentalContractYear());
-        existing.setIsOfficialProtection(dto.getIsOfficialProtection());
-        existing.setIsDisqualified(dto.getIsDisqualified());
-        existing.setMaxSalePrice(dto.getMaxSalePrice());
-        existing.setDeclaredAmount(dto.getDeclaredAmount());
-        existing.setVerifiedAmount(dto.getVerifiedAmount());
-        existing.setObservations(dto.getObservations());
-        existing.setTransmissionPercentage(dto.getTransmissionPercentage());
+        if (dto.getNumberOfUnits() != null && !"PG".equals(dto.getPropertyType()) && dto.getNumberOfUnits() != 1) {
+            throw new IllegalArgumentException("Number of units must be 1 for this property type");
+        }
+        
+        if (dto.getHabitualResidenceValue() != null && dto.getVerifiedValue() != null 
+            && dto.getHabitualResidenceValue().compareTo(dto.getVerifiedValue()) > 0) {
+            throw new IllegalArgumentException("Habitual residence value cannot exceed verified value");
+        }
     }
 
     private UrbanPropertyDTO convertToDTO(UrbanProperty entity) {
@@ -148,75 +212,101 @@ public class UrbanPropertyService {
         dto.setAssetSequence(entity.getAssetSequence());
         dto.setProvinceCode(entity.getProvinceCode());
         dto.setMunicipalityCode(entity.getMunicipalityCode());
-        dto.setStreetType(entity.getStreetType());
+        dto.setStreetTypeCode(entity.getStreetTypeCode());
         dto.setStreetName(entity.getStreetName());
         dto.setStreetNumber(entity.getStreetNumber());
         dto.setPostalCode(entity.getPostalCode());
-        dto.setStaircase(entity.getStaircase());
-        dto.setFloor(entity.getFloor());
-        dto.setDoor(entity.getDoor());
-        dto.setCountry(entity.getCountry());
+        dto.setCountryCode(entity.getCountryCode());
         dto.setCadastralReference(entity.getCadastralReference());
         dto.setPropertyType(entity.getPropertyType());
-        dto.setIsHabitualResidence(entity.getIsHabitualResidence());
+        dto.setConstructionYear(entity.getConstructionYear());
+        dto.setSituationCode(entity.getSituationCode());
+        dto.setRentalIndicator(entity.getRentalIndicator());
+        dto.setRentalContractYear(entity.getRentalContractYear());
+        dto.setOfficialProtectionIndicator(entity.getOfficialProtectionIndicator());
+        dto.setDisqualificationIndicator(entity.getDisqualificationIndicator());
+        dto.setMaxSalePrice(entity.getMaxSalePrice());
+        dto.setHabitualResidenceIndicator(entity.getHabitualResidenceIndicator());
         dto.setHabitualResidenceValue(entity.getHabitualResidenceValue());
         dto.setNumberOfUnits(entity.getNumberOfUnits());
         dto.setSurfaceArea(entity.getSurfaceArea());
-        dto.setConstructionYear(entity.getConstructionYear());
-        dto.setSituationCode(entity.getSituationCode());
-        dto.setIsRented(entity.getIsRented());
-        dto.setRentalContractYear(entity.getRentalContractYear());
-        dto.setIsOfficialProtection(entity.getIsOfficialProtection());
-        dto.setIsDisqualified(entity.getIsDisqualified());
-        dto.setMaxSalePrice(entity.getMaxSalePrice());
-        dto.setDeclaredAmount(entity.getDeclaredAmount());
-        dto.setVerifiedAmount(entity.getVerifiedAmount());
-        dto.setObservations(entity.getObservations());
+        dto.setDeclaredValue(entity.getDeclaredValue());
+        dto.setVerifiedValue(entity.getVerifiedValue());
         dto.setTransmissionPercentage(entity.getTransmissionPercentage());
+        dto.setPositionType(entity.getPositionType());
+        dto.setReferenceValueIndicator(entity.getReferenceValueIndicator());
+        dto.setValidReferenceValueIndicator(entity.getValidReferenceValueIndicator());
+        dto.setReferenceValue(entity.getReferenceValue());
+        dto.setDuplicateIndicator(entity.getDuplicateIndicator());
+        dto.setObservations(entity.getObservations());
         
-        if (entity.getVerifiedAmount() != null && entity.getTransmissionPercentage() != null) {
-            dto.setProportionalVerifiedAmount(
-                    calculationService.calculateProportionalVerifiedAmount(
-                            entity.getVerifiedAmount(), entity.getTransmissionPercentage()));
+        provinceRepository.findByProvinceCode(entity.getProvinceCode())
+                .ifPresent(p -> dto.setProvinceName(p.getProvinceName()));
+        
+        if (entity.getProvinceCode() != null && entity.getMunicipalityCode() != null) {
+            municipalityRepository.findByProvinceCodeAndMunicipalityCode(
+                    entity.getProvinceCode(), entity.getMunicipalityCode())
+                    .ifPresent(m -> dto.setMunicipalityName(m.getMunicipalityName()));
         }
+        
+        String conformity = conformityService.calculateConformityForUrbanProperty(
+                entity.getReferenceValueIndicator(),
+                entity.getValidReferenceValueIndicator(),
+                entity.getReferenceValue(),
+                entity.getDeclaredValue(),
+                entity.getVerifiedValue());
+        dto.setConformityStatus(conformity);
+        
+        BigDecimal calculatedValue = conformityService.calculateConformingValue(
+                entity.getDeclaredValue(),
+                entity.getVerifiedValue(),
+                entity.getTransmissionPercentage(),
+                conformity,
+                2);
+        dto.setCalculatedVerifiedValue(calculatedValue);
         
         return dto;
     }
 
     private UrbanProperty convertToEntity(UrbanPropertyDTO dto) {
         UrbanProperty entity = new UrbanProperty();
+        updateEntityFromDTO(entity, dto);
+        return entity;
+    }
+
+    private void updateEntityFromDTO(UrbanProperty entity, UrbanPropertyDTO dto) {
         entity.setPresentationYear(dto.getPresentationYear());
         entity.setTaxType(dto.getTaxType());
         entity.setPresentationCode(dto.getPresentationCode());
         entity.setAssetSequence(dto.getAssetSequence());
         entity.setProvinceCode(dto.getProvinceCode());
         entity.setMunicipalityCode(dto.getMunicipalityCode());
-        entity.setStreetType(dto.getStreetType());
+        entity.setStreetTypeCode(dto.getStreetTypeCode());
         entity.setStreetName(dto.getStreetName());
         entity.setStreetNumber(dto.getStreetNumber());
         entity.setPostalCode(dto.getPostalCode());
-        entity.setStaircase(dto.getStaircase());
-        entity.setFloor(dto.getFloor());
-        entity.setDoor(dto.getDoor());
-        entity.setCountry(dto.getCountry());
+        entity.setCountryCode(dto.getCountryCode());
         entity.setCadastralReference(dto.getCadastralReference());
         entity.setPropertyType(dto.getPropertyType());
-        entity.setIsHabitualResidence(dto.getIsHabitualResidence());
+        entity.setConstructionYear(dto.getConstructionYear());
+        entity.setSituationCode(dto.getSituationCode());
+        entity.setRentalIndicator(dto.getRentalIndicator());
+        entity.setRentalContractYear(dto.getRentalContractYear());
+        entity.setOfficialProtectionIndicator(dto.getOfficialProtectionIndicator());
+        entity.setDisqualificationIndicator(dto.getDisqualificationIndicator());
+        entity.setMaxSalePrice(dto.getMaxSalePrice());
+        entity.setHabitualResidenceIndicator(dto.getHabitualResidenceIndicator());
         entity.setHabitualResidenceValue(dto.getHabitualResidenceValue());
         entity.setNumberOfUnits(dto.getNumberOfUnits());
         entity.setSurfaceArea(dto.getSurfaceArea());
-        entity.setConstructionYear(dto.getConstructionYear());
-        entity.setSituationCode(dto.getSituationCode());
-        entity.setIsRented(dto.getIsRented());
-        entity.setRentalContractYear(dto.getRentalContractYear());
-        entity.setIsOfficialProtection(dto.getIsOfficialProtection());
-        entity.setIsDisqualified(dto.getIsDisqualified());
-        entity.setMaxSalePrice(dto.getMaxSalePrice());
-        entity.setDeclaredAmount(dto.getDeclaredAmount());
-        entity.setVerifiedAmount(dto.getVerifiedAmount());
+        entity.setDeclaredValue(dto.getDeclaredValue());
+        entity.setVerifiedValue(dto.getVerifiedValue());
+        entity.setTransmissionPercentage(dto.getTransmissionPercentage());
+        entity.setPositionType(dto.getPositionType());
+        entity.setReferenceValueIndicator(dto.getReferenceValueIndicator());
+        entity.setValidReferenceValueIndicator(dto.getValidReferenceValueIndicator());
+        entity.setReferenceValue(dto.getReferenceValue());
+        entity.setDuplicateIndicator(dto.getDuplicateIndicator());
         entity.setObservations(dto.getObservations());
-        entity.setTransmissionPercentage(dto.getTransmissionPercentage() != null ? 
-                dto.getTransmissionPercentage() : new BigDecimal("100"));
-        return entity;
     }
 }
