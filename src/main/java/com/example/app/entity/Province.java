@@ -1,38 +1,37 @@
 package com.example.app.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "SUCA_PROVINCIA")
-public class Province implements Serializable {
+@Table(name = "PROVINCE")
+public class Province {
 
     @Id
-    @Column(name = "CDPROV", length = 2)
-    private String cdprov;
+    @Column(name = "PROVINCE_CODE", length = 2)
+    private String provinceCode;
 
-    @Column(name = "DSPROV", length = 50)
-    private String dsprov;
+    @Column(name = "PROVINCE_NAME", length = 100)
+    private String provinceName;
 
     public Province() {
     }
 
-    public String getCdprov() {
-        return cdprov;
+    public String getProvinceCode() {
+        return provinceCode;
     }
 
-    public void setCdprov(String cdprov) {
-        this.cdprov = cdprov;
+    public void setProvinceCode(String provinceCode) {
+        this.provinceCode = provinceCode;
     }
 
-    public String getDsprov() {
-        return dsprov;
+    public String getProvinceName() {
+        return provinceName;
     }
 
-    public void setDsprov(String dsprov) {
-        this.dsprov = dsprov;
+    public void setProvinceName(String provinceName) {
+        this.provinceName = provinceName;
     }
 }

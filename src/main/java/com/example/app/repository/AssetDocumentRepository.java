@@ -13,13 +13,26 @@ import java.util.Optional;
 @Repository
 public interface AssetDocumentRepository extends JpaRepository<AssetDocument, AssetDocumentId> {
 
-    List<AssetDocument> findByAapresentaAndVftipoimpuAndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
+    @Query("SELECT a FROM AssetDocument a WHERE a.presentationYear = :presentationYear AND a.taxType = :taxType AND a.presentationCode = :presentationCode")
+    List<AssetDocument> findByPresentationYearAndTaxTypeAndPresentationCode(
+            @Param("presentationYear") String presentationYear,
+            @Param("taxType") String taxType,
+            @Param("presentationCode") String presentationCode);
 
-    @Query("SELECT COALESCE(MAX(CAST(a.cdsecubien AS int)), 0) + 1 FROM AssetDocument a WHERE a.aapresenta = :aapresenta AND a.vftipoimpu = :vftipoimpu AND a.cdpresenta = :cdpresenta")
-    Integer findNextSequence(@Param("aapresenta") String aapresenta, @Param("vftipoimpu") String vftipoimpu, @Param("cdpresenta") String cdpresenta);
+    @Query("SELECT COUNT(a) FROM AssetDocument a WHERE a.presentationYear = :presentationYear AND a.taxType = :taxType AND a.presentationCode = :presentationCode AND a.assetSequence = :assetSequence")
+    Long countByKey(@Param("presentationYear") String presentationYear,
+                    @Param("taxType") String taxType,
+                    @Param("presentationCode") String presentationCode,
+                    @Param("assetSequence") String assetSequence);
 
-    long countByAapresentaAndVftipoimpuAndCdpresentaAndCdsecubien(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien);
+    @Query("SELECT MAX(CAST(a.assetSequence AS int)) FROM AssetDocument a WHERE a.presentationYear = :presentationYear AND a.taxType = :taxType AND a.presentationCode = :presentationCode")
+    Integer findMaxAssetSequence(@Param("presentationYear") String presentationYear,
+                                  @Param("taxType") String taxType,
+                                  @Param("presentationCode") String presentationCode);
 
-    @Query("SELECT a FROM AssetDocument a WHERE a.aapresenta = :aapresenta AND a.vftipoimpu = :vftipoimpu AND a.cdpresenta = :cdpresenta AND a.cdsecubien = :cdsecubien AND a.fccomproba IS NOT NULL AND a.idcomproba IS NOT NULL")
-    Optional<AssetDocument> findValuatedAsset(@Param("aapresenta") String aapresenta, @Param("vftipoimpu") String vftipoimpu, @Param("cdpresenta") String cdpresenta, @Param("cdsecubien") String cdsecubien);
+    @Query("SELECT a FROM AssetDocument a WHERE a.presentationYear = :presentationYear AND a.taxType = :taxType AND a.presentationCode = :presentationCode AND a.assetSequence = :assetSequence AND a.verifiedValue IS NOT NULL")
+    Optional<AssetDocument> findVerifiedAsset(@Param("presentationYear") String presentationYear,
+                                               @Param("taxType") String taxType,
+                                               @Param("presentationCode") String presentationCode,
+                                               @Param("assetSequence") String assetSequence);
 }
