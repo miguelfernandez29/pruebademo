@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Asset List</title>
+    <title>Lista de Bienes</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -11,101 +11,100 @@
         <div class="container">
             <a class="navbar-brand" href="/">GTLIA20900</a>
             <div class="navbar-nav">
-                <a class="nav-link active" href="/assets">Assets</a>
-                <a class="nav-link" href="/urban-properties">Urban Properties</a>
+                <a class="nav-link active" th:href="@{/assets}">Bienes</a>
+                <a class="nav-link" th:href="@{/}">Inicio</a>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h2>Asset List</h2>
-        
-        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
             <span th:text="${successMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
-        
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
             <span th:text="${errorMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header">Declaration Parameters</div>
+        <div class="card">
+            <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Lista de Bienes</h5>
+                <a th:href="@{/assets/new(aapresenta=${aapresenta}, vftipoimpu=${vftipoimpu}, cdpresenta=${cdpresenta})}" 
+                   class="btn btn-light btn-sm">
+                    <i class="bi bi-plus"></i> Nuevo Bien
+                </a>
+            </div>
             <div class="card-body">
-                <form method="get" action="/assets" class="row g-3">
-                    <div class="col-md-3">
-                        <label class="form-label">Presentation Year</label>
-                        <input type="text" class="form-control" name="presentationYear" th:value="${presentationYear}">
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label">Tax Type</label>
-                        <input type="text" class="form-control" name="taxType" th:value="${taxType}">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Año Presentación:</label>
+                        <input type="text" class="form-control" th:value="${aapresenta}" readonly>
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Presentation Code</label>
-                        <input type="text" class="form-control" name="presentationCode" th:value="${presentationCode}">
+                        <label class="form-label">Tipo Impuesto:</label>
+                        <input type="text" class="form-control" th:value="${vftipoimpu}" readonly>
                     </div>
-                    <div class="col-md-2 d-flex align-items-end">
-                        <button type="submit" class="btn btn-primary">Search</button>
+                    <div class="col-md-4">
+                        <label class="form-label">Código Presentación:</label>
+                        <input type="text" class="form-control" th:value="${cdpresenta}" readonly>
                     </div>
-                </form>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Secuencia</th>
+                                <th>Naturaleza</th>
+                                <th>Valor Declarado</th>
+                                <th>Valor Comprobado</th>
+                                <th>Fecha Comprobación</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="asset : ${assets}">
+                                <td th:text="${asset.cdsecubien}"></td>
+                                <td>
+                                    <span th:switch="${asset.cdnatbien2}">
+                                        <span th:case="'U'">Urbano</span>
+                                        <span th:case="'R'">Rústico</span>
+                                        <span th:case="'V'">Vehículo</span>
+                                        <span th:case="'C'">Cuenta Bancaria</span>
+                                        <span th:case="'A'">Actividad Empresarial</span>
+                                        <span th:case="'T'">Otros</span>
+                                        <span th:case="'N'">Valores No Negociados</span>
+                                        <span th:case="*" th:text="${asset.cdnatbien2}"></span>
+                                    </span>
+                                </td>
+                                <td th:text="${asset.ptdeclarad != null ? #numbers.formatDecimal(asset.ptdeclarad, 1, 2) : '-'}"></td>
+                                <td th:text="${asset.ptcomproba != null ? #numbers.formatDecimal(asset.ptcomproba, 1, 2) : '-'}"></td>
+                                <td th:text="${asset.fccomproba != null ? #temporals.format(asset.fccomproba, 'dd/MM/yyyy') : '-'}"></td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <a th:if="${asset.cdnatbien2 == 'U'}"
+                                           th:href="@{/urban-properties/edit/{id}(id=${asset.cdsecubien}, aapresenta=${aapresenta}, vftipoimpu=${vftipoimpu}, cdpresenta=${cdpresenta})}"
+                                           class="btn btn-outline-primary">Editar</a>
+                                        <a th:unless="${asset.cdnatbien2 == 'U'}"
+                                           th:href="@{/assets/edit/{id}(id=${asset.cdsecubien}, aapresenta=${aapresenta}, vftipoimpu=${vftipoimpu}, cdpresenta=${cdpresenta})}"
+                                           class="btn btn-outline-primary">Editar</a>
+                                        <form th:action="@{/assets/delete/{id}(id=${asset.cdsecubien}, aapresenta=${aapresenta}, vftipoimpu=${vftipoimpu}, cdpresenta=${cdpresenta})}" 
+                                              method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-outline-danger" 
+                                                    onclick="return confirm('¿Está seguro de eliminar este bien?')">Eliminar</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(assets)}">
+                                <td colspan="6" class="text-center">No hay bienes registrados</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-
-        <div class="d-flex justify-content-between mb-3">
-            <a th:href="@{/assets/add(presentationYear=${presentationYear},taxType=${taxType},presentationCode=${presentationCode})}" 
-               class="btn btn-success">Add New Asset</a>
-            <div>
-                <span class="badge bg-info me-2">Total Declared: <span th:text="${#numbers.formatDecimal(totalDeclaredValue, 1, 2)}">0.00</span></span>
-                <span class="badge bg-success">Total Verified: <span th:text="${#numbers.formatDecimal(totalVerifiedValue, 1, 2)}">0.00</span></span>
-            </div>
-        </div>
-
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>Sequence</th>
-                    <th>Nature</th>
-                    <th>Description</th>
-                    <th>Declared Value</th>
-                    <th>Verified Value</th>
-                    <th>Conformity</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="asset : ${assets}">
-                    <td th:text="${asset.assetSequence}"></td>
-                    <td th:text="${asset.assetNature}"></td>
-                    <td th:text="${asset.assetNatureDescription}"></td>
-                    <td th:text="${asset.declaredValue != null ? #numbers.formatDecimal(asset.declaredValue, 1, 2) : '-'}"></td>
-                    <td th:text="${asset.verifiedValue != null ? #numbers.formatDecimal(asset.verifiedValue, 1, 2) : '-'}"></td>
-                    <td>
-                        <span th:class="${asset.conformityStatus == 'Conforming' ? 'badge bg-success' : (asset.conformityStatus == 'Non-Conforming' ? 'badge bg-danger' : 'badge bg-warning')}"
-                              th:text="${asset.conformityStatus}"></span>
-                    </td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <a th:if="${asset.assetNature == 'U'}" 
-                               th:href="@{/urban-properties/view/{y}/{t}/{c}/{s}(y=${asset.presentationYear},t=${asset.taxType},c=${asset.presentationCode},s=${asset.assetSequence})}"
-                               class="btn btn-outline-info">View</a>
-                            <a th:if="${asset.assetNature == 'U'}" 
-                               th:href="@{/urban-properties/edit/{y}/{t}/{c}/{s}(y=${asset.presentationYear},t=${asset.taxType},c=${asset.presentationCode},s=${asset.assetSequence})}"
-                               class="btn btn-outline-primary">Edit</a>
-                            <form th:action="@{/assets/delete/{y}/{t}/{c}/{s}(y=${asset.presentationYear},t=${asset.taxType},c=${asset.presentationCode},s=${asset.assetSequence})}" 
-                                  method="post" style="display:inline;">
-                                <button type="submit" class="btn btn-outline-danger" 
-                                        onclick="return confirm('Are you sure you want to delete this asset?')">Delete</button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(assets)}">
-                    <td colspan="7" class="text-center">No assets found</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
