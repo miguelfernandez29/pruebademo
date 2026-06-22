@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface RuralPropertyRepository extends JpaRepository<RuralProperty, AssetDocumentId> {
 
-    List<RuralProperty> findByAapresentaAndVftipoimpu AndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
+    List<RuralProperty> findByAapresentaAndVftipoimpuAndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
 }

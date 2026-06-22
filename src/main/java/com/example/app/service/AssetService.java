@@ -26,7 +26,7 @@ public class AssetService {
     }
 
     public List<AssetDocument> findAllByDeclaration(String aapresenta, String vftipoimpu, String cdpresenta) {
-        return assetDocumentRepository.findByAapresentaAndVftipoimpu AndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
+        return assetDocumentRepository.findByAapresentaAndVftipoimpuAndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
     }
 
     public Optional<AssetDocument> findById(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
@@ -46,7 +46,7 @@ public class AssetService {
             cdsecubien = validationService.padLeft(cdsecubien, 3, '0');
         }
 
-        long count = assetDocumentRepository.countByAapresentaAndVftipoimpu AndCdpresentaAndCdsecubien(
+        long count = assetDocumentRepository.countByAapresentaAndVftipoimpuAndCdpresentaAndCdsecubien(
                 dto.getAapresenta(), dto.getVftipoimpu(), dto.getCdpresenta(), cdsecubien);
         if (count > 0) {
             throw new BusinessValidationException("Registro ya existe. Entre por modificación.");

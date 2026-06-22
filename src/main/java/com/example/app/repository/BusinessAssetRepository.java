@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface BusinessAssetRepository extends JpaRepository<BusinessAsset, AssetDocumentId> {
 
-    List<BusinessAsset> findByAapresentaAndVftipoimpu AndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
+    List<BusinessAsset> findByAapresentaAndVftipoimpuAndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
 }
