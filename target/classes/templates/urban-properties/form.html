@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Urban Property Form</title>
+    <title th:text="${isNew} ? 'Nuevo Bien Urbano' : 'Editar Bien Urbano'">Bien Urbano</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -11,25 +11,208 @@
         <div class="container">
             <a class="navbar-brand" href="/">GTLIA20900</a>
             <div class="navbar-nav">
-                <a class="nav-link" href="/assets">Assets</a>
-                <a class="nav-link active" href="/urban-properties">Urban Properties</a>
+                <a class="nav-link" th:href="@{/assets}">Bienes</a>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h2 th:text="${title}">Urban Property Form</h2>
-        
-        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
             <span th:text="${errorMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <form th:action="@{/urban-properties/save}" th:object="${property}" method="post">
-            <input type="hidden" th:field="*{presentationYear}">
-            <input type="hidden" th:field="*{taxType}">
-            <input type="hidden" th:field="*{presentationCode}">
-            <input type="hidden" th:field="*{assetSequence}">
-            <input type="hidden" name="action" th:value="${action}">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0" th:text="${isNew} ? 'Nuevo Bien Urbano' : 'Editar Bien Urbano'">Formulario</h5>
+            </div>
+            <div class="card-body">
+                <form th:action="@{/urban-properties/save}" th:object="${property}" method="post">
+                    <input type="hidden" th:field="*{aapresenta}">
+                    <input type="hidden" th:field="*{vftipoimpu}">
+                    <input type="hidden" th:field="*{cdpresenta}">
+                    <input type="hidden" th:field="*{cdsecubien}">
 
-            <div class="card mb-4">
-                <div class="card-header">Location Information</div>
+                    <fieldset class="border p-3 mb-3">
+                        <legend class="w-auto px-2">Ubicación</legend>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Provincia *</label>
+                                <select class="form-select" th:field="*{cdprovinci}" required>
+                                    <option value="">Seleccione...</option>
+                                    <option th:each="prov : ${provinces}" 
+                                            th:value="${prov.cdprov}" 
+                                            th:text="${prov.cdprov + ' - ' + prov.dsprov}"></option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Municipio</label>
+                                <input type="text" class="form-control" th:field="*{cdmunicipi}" maxlength="3">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">País</label>
+                                <input type="text" class="form-control" th:field="*{cdpais}" maxlength="3" value="ESP">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Referencia Catastral</label>
+                                <input type="text" class="form-control" th:field="*{tlrefecata}" maxlength="20">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Tipo de Bien</label>
+                                <input type="text" class="form-control" th:field="*{cdtipobien}" maxlength="2">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Código Postal</label>
+                                <input type="text" class="form-control" th:field="*{tlcodipost}" maxlength="5">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="border p-3 mb-3">
+                        <legend class="w-auto px-2">Dirección</legend>
+                        <div class="row mb-3">
+                            <div class="col-md-2">
+                                <label class="form-label">Tipo Vía</label>
+                                <input type="text" class="form-control" th:field="*{cdtipoviap}" maxlength="2">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre Vía</label>
+                                <input type="text" class="form-control" th:field="*{tlnombviap}" maxlength="50">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Número</label>
+                                <input type="text" class="form-control" th:field="*{tlnumeviap}" maxlength="5">
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Duplicado</label>
+                                <input type="text" class="form-control" th:field="*{vfduplicad}" maxlength="1">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-4">
+                                <label class="form-label">Escalera</label>
+                                <input type="text" class="form-control" th:field="*{tlescalera}" maxlength="2">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Piso</label>
+                                <input type="text" class="form-control" th:field="*{tlpiso}" maxlength="3">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label">Puerta</label>
+                                <input type="text" class="form-control" th:field="*{tlpuerta}" maxlength="3">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="border p-3 mb-3">
+                        <legend class="w-auto px-2">Características</legend>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Año Construcción</label>
+                                <input type="number" class="form-control" th:field="*{aaconstruc}" min="1500">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Superficie (m²)</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{nmsuperfic}">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Unidades</label>
+                                <input type="number" class="form-control" th:field="*{nmunidades}">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Situación</label>
+                                <input type="text" class="form-control" th:field="*{cdsituaci2}" maxlength="2">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label">Arrendado</label>
+                                <select class="form-select" th:field="*{itarrendam}">
+                                    <option value="">-</option>
+                                    <option value="S">Sí</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Protección Oficial</label>
+                                <select class="form-select" th:field="*{itprotofic}">
+                                    <option value="">-</option>
+                                    <option value="S">Sí</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Descalificado</label>
+                                <select class="form-select" th:field="*{itdescalif}">
+                                    <option value="">-</option>
+                                    <option value="S">Sí</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Vivienda Habitual</label>
+                                <select class="form-select" th:field="*{itvivihabi}">
+                                    <option value="">-</option>
+                                    <option value="S">Sí</option>
+                                    <option value="N">No</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="border p-3 mb-3">
+                        <legend class="w-auto px-2">Valoración</legend>
+                        <div class="row mb-3">
+                            <div class="col-md-3">
+                                <label class="form-label">% Transmisión</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{pctransmis}" min="0" max="100">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Valor Declarado</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{ptdeclarad}">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Valor Comprobado</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{ptcomproba}">
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">Valor Referencia</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{ptvalorref}" readonly>
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Valor Vivienda Habitual</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{ptvivihabi}">
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Precio Máximo Venta</label>
+                                <input type="number" step="0.01" class="form-control" th:field="*{ptmaxventa}">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <fieldset class="border p-3 mb-3">
+                        <legend class="w-auto px-2">Observaciones</legend>
+                        <div class="row">
+                            <div class="col-12">
+                                <textarea class="form-control" th:field="*{tlobservac}" rows="3" maxlength="200"></textarea>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{/assets(aapresenta=${property.aapresenta}, vftipoimpu=${property.vftipoimpu}, cdpresenta=${property.cdpresenta})}" 
+                           class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

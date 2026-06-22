@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface UrbanPropertyRepository extends JpaRepository<UrbanProperty, AssetDocumentId> {
 
-    List<UrbanProperty> findByAapresentaAndVftipoimpu AndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
+    List<UrbanProperty> findByAapresentaAndVftipoimpuAndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
 
     @Query("SELECT COUNT(u) FROM UrbanProperty u WHERE u.aapresenta = :aapresenta AND u.vftipoimpu = :vftipoimpu AND u.cdpresenta = :cdpresenta AND u.cdsecubien <> :cdsecubien AND u.itvivihabi = 'S'")
     long countOtherHabitualResidences(@Param("aapresenta") String aapresenta, @Param("vftipoimpu") String vftipoimpu, @Param("cdpresenta") String cdpresenta, @Param("cdsecubien") String cdsecubien);

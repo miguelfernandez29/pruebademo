@@ -38,7 +38,7 @@ public class UrbanPropertyService {
     }
 
     public List<UrbanProperty> findAllByDeclaration(String aapresenta, String vftipoimpu, String cdpresenta) {
-        return urbanPropertyRepository.findByAapresentaAndVftipoimpu AndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
+        return urbanPropertyRepository.findByAapresentaAndVftipoimpuAndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
     }
 
     public Optional<UrbanProperty> findById(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
