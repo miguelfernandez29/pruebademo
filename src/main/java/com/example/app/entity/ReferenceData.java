@@ -1,63 +1,31 @@
 package com.example.app.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
-import javax.persistence.Column;
-import java.io.Serializable;
+public class ReferenceData {
 
-@Entity
-@Table(name = "GATA_DATOGENA")
-@IdClass(ReferenceDataId.class)
-public class ReferenceData implements Serializable {
-
-    @Id
-    @Column(name = "CDTIPODATO", length = 3)
-    private String cdtipodato;
-
-    @Id
-    @Column(name = "CDDATOGENA", length = 2)
-    private String cddatogena;
-
-    @Column(name = "DSABREV", length = 50)
-    private String dsabrev;
-
-    @Column(name = "DSDATOGENA", length = 100)
-    private String dsdatogena;
+    private String code;
+    private String description;
 
     public ReferenceData() {
     }
 
-    public String getCdtipodato() {
-        return cdtipodato;
+    public ReferenceData(String code, String description) {
+        this.code = code;
+        this.description = description;
     }
 
-    public void setCdtipodato(String cdtipodato) {
-        this.cdtipodato = cdtipodato;
+    public String getCode() {
+        return code;
     }
 
-    public String getCddatogena() {
-        return cddatogena;
+    public void setCode(String code) {
+        this.code = code;
     }
 
-    public void setCddatogena(String cddatogena) {
-        this.cddatogena = cddatogena;
+    public String getDescription() {
+        return description;
     }
 
-    public String getDsabrev() {
-        return dsabrev;
-    }
-
-    public void setDsabrev(String dsabrev) {
-        this.dsabrev = dsabrev;
-    }
-
-    public String getDsdatogena() {
-        return dsdatogena;
-    }
-
-    public void setDsdatogena(String dsdatogena) {
-        this.dsdatogena = dsdatogena;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

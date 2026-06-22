@@ -1,9 +1,10 @@
-com\example\app\entity\MunicipalityId.class
 com\example\app\entity\OtherAsset.class
 com\example\app\service\UrbanPropertyService.class
 com\example\app\repository\ProvinceRepository.class
+com\example\app\entity\Municipality$MunicipalityId.class
 com\example\app\entity\Municipality.class
 com\example\app\repository\UrbanPropertyRepository.class
+com\example\app\controller\rest\LegacyBeneficiaryRestController.class
 com\example\app\repository\MunicipalityRepository.class
 com\example\app\entity\RusticAsset.class
 com\example\app\entity\UrbanProperty.class
