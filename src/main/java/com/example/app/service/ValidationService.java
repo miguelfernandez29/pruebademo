@@ -1,10 +1,10 @@
 package com.example.app.service;
 
+import com.example.app.exception.BusinessValidationException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 @Service
@@ -12,140 +12,136 @@ public class ValidationService {
 
     private static final BigDecimal MAX_VALUE = new BigDecimal("999999999999.99");
     private static final BigDecimal HUNDRED = new BigDecimal("100");
-    private static final int MIN_CONSTRUCTION_YEAR = 1500;
 
-    public String padLeft(String value, int length, char padChar) {
-        if (value == null) {
-            return null;
+    public void validateProvinceCode(String cdprovinci) {
+        if (cdprovinci == null || cdprovinci.trim().isEmpty()) {
+            throw new BusinessValidationException("El campo 'Provincia' es obligatorio.");
         }
-        StringBuilder sb = new StringBuilder();
-        for (int i = value.length(); i < length; i++) {
-            sb.append(padChar);
-        }
-        sb.append(value);
-        return sb.toString();
-    }
-
-    public void validateProvinceCode(String provinceCode) {
-        if (provinceCode == null || provinceCode.trim().isEmpty()) {
-            throw new IllegalArgumentException("Province code is required");
-        }
-        if (!provinceCode.matches("\\d{2}")) {
-            throw new IllegalArgumentException("Province code must be 2 digits");
+        if (cdprovinci.length() > 2) {
+            throw new BusinessValidationException("El código de provincia no puede tener más de 2 caracteres.");
         }
     }
 
-    public void validateMunicipalityCode(String municipalityCode) {
-        if (municipalityCode != null && !municipalityCode.matches("\\d{3}")) {
-            throw new IllegalArgumentException("Municipality code must be 3 digits");
-        }
-    }
-
-    public void validatePostalCode(String postalCode, String provinceCode) {
-        if (postalCode == null || postalCode.trim().isEmpty()) {
-            return;
-        }
-        if (!postalCode.matches("\\d{5}")) {
-            throw new IllegalArgumentException("Postal code must be 5 digits");
-        }
-        if (provinceCode != null && !postalCode.startsWith(provinceCode)) {
-            throw new IllegalArgumentException("Postal code must start with province code");
-        }
-    }
-
-    public void validateTransmissionPercentage(BigDecimal percentage) {
-        if (percentage == null) {
-            return;
-        }
-        if (percentage.compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("Transmission percentage must be greater than 0");
-        }
-        if (percentage.compareTo(HUNDRED) > 0) {
-            throw new IllegalArgumentException("Transmission percentage cannot exceed 100");
-        }
-    }
-
-    public void validatePositionType(String positionType) {
-        if (positionType != null && !positionType.matches("[PG]")) {
-            throw new IllegalArgumentException("Position type must be P or G");
-        }
-    }
-
-    public void validateIndicator(String indicator, String fieldName) {
-        if (indicator != null && !indicator.matches("[SN]")) {
-            throw new IllegalArgumentException(fieldName + " must be S or N");
-        }
-    }
-
-    public void validateDuplicateIndicator(String indicator) {
-        if (indicator != null && !indicator.matches("[DT]")) {
-            throw new IllegalArgumentException("Duplicate indicator must be D or T");
-        }
-    }
-
-    public void validateConstructionYear(Integer year, Date accrualDate) {
-        if (year == null) {
-            return;
-        }
-        Calendar cal = Calendar.getInstance();
-        int currentYear = cal.get(Calendar.YEAR);
-        
-        if (year < MIN_CONSTRUCTION_YEAR || year > currentYear) {
-            throw new IllegalArgumentException("Construction year must be between 1500 and current year");
-        }
-        
-        if (accrualDate != null) {
-            cal.setTime(accrualDate);
-            int accrualYear = cal.get(Calendar.YEAR);
-            if (year > accrualYear) {
-                throw new IllegalArgumentException("Construction year cannot be after accrual year");
+    public void validateMunicipalityCode(String cdmunicipi, String cdprovinci) {
+        if (cdmunicipi != null && !cdmunicipi.trim().isEmpty()) {
+            if (cdprovinci == null || cdprovinci.trim().isEmpty()) {
+                throw new BusinessValidationException("Para obtener el municipio es necesario su provincia.");
             }
         }
     }
 
-    public void validateMonetaryValue(BigDecimal value, String fieldName) {
-        if (value == null) {
+    public void validateTransmissionPercentage(BigDecimal pctransmis) {
+        if (pctransmis == null) {
             return;
         }
-        if (value.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException(fieldName + " must be positive");
+        if (pctransmis.compareTo(HUNDRED) > 0) {
+            throw new BusinessValidationException("El campo '% titularidad' no puede ser superior al 100%.");
         }
-        if (value.compareTo(MAX_VALUE) > 0) {
-            throw new IllegalArgumentException(fieldName + " exceeds maximum allowed value");
+        if (pctransmis.compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BusinessValidationException("El campo '% titularidad' no puede ser menor o igual al 0%.");
         }
     }
 
-    public BigDecimal truncateToTwoDecimals(BigDecimal value) {
-        if (value == null) {
-            return null;
+    public void validateDeclaredValue(BigDecimal ptdeclarad) {
+        if (ptdeclarad != null && ptdeclarad.compareTo(MAX_VALUE) > 0) {
+            throw new BusinessValidationException("El valor máximo permitido es: 999.999.999.999,99");
         }
-        return value.setScale(2, BigDecimal.ROUND_DOWN);
     }
 
-    public boolean validateCadastralReference(String reference) {
-        if (reference == null || reference.trim().isEmpty()) {
-            return true;
+    public void validateVerifiedValue(BigDecimal ptcomproba) {
+        if (ptcomproba != null) {
+            if (ptcomproba.compareTo(MAX_VALUE) > 0) {
+                throw new BusinessValidationException("El valor máximo permitido es: 999.999.999.999,99");
+            }
+            if (ptcomproba.compareTo(BigDecimal.ZERO) == 0) {
+                throw new BusinessValidationException("El valor comprobado no puede ser 0.");
+            }
         }
-        String cleaned = reference.replaceAll("\\s+", "");
-        return cleaned.length() == 20 || cleaned.length() == 14;
     }
 
-    public boolean validateIban(String iban) {
+    public void validateConstructionYear(Integer aaconstruc, LocalDate fcdevengo) {
+        if (aaconstruc == null) {
+            return;
+        }
+        int currentYear = LocalDate.now().getYear();
+        if (aaconstruc < 1500 || aaconstruc > currentYear) {
+            throw new BusinessValidationException("El año de construcción debe de estar entre 1500 y el año actual.");
+        }
+        if (fcdevengo != null && aaconstruc > fcdevengo.getYear()) {
+            throw new BusinessValidationException("Año de construcción posterior al año de devengo.");
+        }
+    }
+
+    public void validateRentalContractYear(Integer aacontarre, LocalDate fcdevengo) {
+        if (aacontarre == null) {
+            return;
+        }
+        int currentYear = LocalDate.now().getYear();
+        if (aacontarre < 1500 || aacontarre > currentYear) {
+            throw new BusinessValidationException("El año de contrato debe de estar entre 1500 y el año actual.");
+        }
+        if (fcdevengo != null && aacontarre > fcdevengo.getYear()) {
+            throw new BusinessValidationException("Año de contrato posterior al año del devengo.");
+        }
+    }
+
+    public void validateYesNoIndicator(String indicator, String fieldName) {
+        if (indicator != null && !indicator.isEmpty()) {
+            if (!"S".equals(indicator) && !"N".equals(indicator)) {
+                throw new BusinessValidationException("Valores permitidos para " + fieldName + ": S o N.");
+            }
+        }
+    }
+
+    public void validateDuplicateIndicator(String vfduplicad) {
+        if (vfduplicad != null && !vfduplicad.isEmpty()) {
+            if (!"D".equals(vfduplicad) && !"T".equals(vfduplicad)) {
+                throw new BusinessValidationException("Valores permitidos: D o T.");
+            }
+        }
+    }
+
+    public void validateCadastralReference(String tlrefecata, String cdnatbien2) {
+        if (tlrefecata == null || tlrefecata.trim().isEmpty()) {
+            return;
+        }
+        String cleanRef = tlrefecata.replaceAll("\\s+", "");
+        if ("U".equals(cdnatbien2)) {
+            if (cleanRef.length() != 20) {
+                throw new BusinessValidationException("La referencia catastral urbana debe tener 20 caracteres.");
+            }
+        } else if ("R".equals(cdnatbien2)) {
+            if (cleanRef.length() != 14 && cleanRef.length() != 20) {
+                throw new BusinessValidationException("La referencia catastral rústica debe tener 14 o 20 caracteres.");
+            }
+        }
+    }
+
+    public void validateVehicleRegistrationDate(LocalDate fcmatricul, LocalDate fcdevengo) {
+        if (fcmatricul == null) {
+            return;
+        }
+        if (fcmatricul.isAfter(LocalDate.now())) {
+            throw new BusinessValidationException("Fecha no puede ser mayor que la actual.");
+        }
+        if (fcdevengo != null && fcmatricul.isAfter(fcdevengo)) {
+            throw new BusinessValidationException("Fecha no puede ser mayor que la fecha de defunción (devengo).");
+        }
+    }
+
+    public boolean validateIBAN(String iban) {
         if (iban == null || iban.trim().isEmpty()) {
             return true;
         }
-        String cleaned = iban.replaceAll("\\s+", "").toUpperCase();
-        if (cleaned.length() < 15 || cleaned.length() > 34) {
+        String cleanIban = iban.replaceAll("\\s+", "").toUpperCase();
+        if (cleanIban.length() < 15 || cleanIban.length() > 34) {
             return false;
         }
-        if (!cleaned.matches("[A-Z]{2}[0-9]{2}[A-Z0-9]+")) {
-            return false;
-        }
-        String rearranged = cleaned.substring(4) + cleaned.substring(0, 4);
+        String rearranged = cleanIban.substring(4) + cleanIban.substring(0, 4);
         StringBuilder numericIban = new StringBuilder();
         for (char c : rearranged.toCharArray()) {
             if (Character.isLetter(c)) {
-                numericIban.append(c - 'A' + 10);
+                numericIban.append(Character.getNumericValue(c));
             } else {
                 numericIban.append(c);
             }
@@ -158,41 +154,46 @@ public class ValidationService {
         }
     }
 
-    public void validateRegistrationDate(Date registrationDate, Date accrualDate) {
-        if (registrationDate == null) {
+    public void validateLegacyPercentage(BigDecimal pclegadosp) {
+        if (pclegadosp == null) {
             return;
         }
-        Date now = new Date();
-        if (registrationDate.after(now)) {
-            throw new IllegalArgumentException("Registration date cannot be in the future");
-        }
-        if (accrualDate != null && registrationDate.after(accrualDate)) {
-            throw new IllegalArgumentException("Registration date cannot be after accrual date");
+        if (pclegadosp.compareTo(BigDecimal.ZERO) < 0 || pclegadosp.compareTo(HUNDRED) > 0) {
+            throw new BusinessValidationException("El porcentaje de legado debe estar entre 0 y 100.");
         }
     }
 
-    public void validateLegacyPercentage(BigDecimal percentage) {
-        if (percentage == null) {
-            return;
-        }
-        if (percentage.compareTo(BigDecimal.ZERO) < 0) {
-            throw new IllegalArgumentException("Legacy percentage must be at least 0");
-        }
-        if (percentage.compareTo(HUNDRED) > 0) {
-            throw new IllegalArgumentException("Legacy percentage cannot exceed 100");
+    public void validateAcquisitionType(String cdtpadqui2) {
+        if (cdtpadqui2 != null && !cdtpadqui2.isEmpty()) {
+            if (!"P".equals(cdtpadqui2) && !"N".equals(cdtpadqui2)) {
+                throw new BusinessValidationException("Valores permitidos: P o N.");
+            }
         }
     }
 
-    public void validateAcquisitionType(String type) {
-        if (type != null && !type.matches("[PN]")) {
-            throw new IllegalArgumentException("Acquisition type must be P or N");
+    public void validatePositionType(String cdposbien2) {
+        if (cdposbien2 != null && !cdposbien2.isEmpty()) {
+            if (!"P".equals(cdposbien2) && !"G".equals(cdposbien2)) {
+                throw new BusinessValidationException("Valores permitidos: P o G.");
+            }
         }
     }
 
-    public String validateAndFormatNif(String nif) {
-        if (nif == null || nif.trim().isEmpty()) {
+    public void validateNatureType(String cdnatbien2) {
+        if (cdnatbien2 == null || cdnatbien2.trim().isEmpty()) {
+            throw new BusinessValidationException("Campo 'Naturaleza' obligatorio.");
+        }
+    }
+
+    public String padLeft(String value, int length, char padChar) {
+        if (value == null) {
             return null;
         }
-        return padLeft(nif.trim(), 9, '0');
+        StringBuilder sb = new StringBuilder();
+        for (int i = value.length(); i < length; i++) {
+            sb.append(padChar);
+        }
+        sb.append(value);
+        return sb.toString();
     }
 }

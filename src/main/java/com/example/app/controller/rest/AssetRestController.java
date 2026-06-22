@@ -1,78 +1,87 @@
 package com.example.app.controller.rest;
 
-import com.example.app.dto.AssetSummaryDTO;
+import com.example.app.dto.AssetDocumentDTO;
+import com.example.app.entity.AssetDocument;
 import com.example.app.service.AssetService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/assets")
-@Tag(name = "Assets", description = "Asset management operations")
+@Tag(name = "Assets", description = "Asset management API")
 public class AssetRestController {
 
     private final AssetService assetService;
 
+    @Autowired
     public AssetRestController(AssetService assetService) {
         this.assetService = assetService;
     }
 
     @GetMapping
-    @Operation(summary = "Get asset list for a declaration")
-    public ResponseEntity<List<AssetSummaryDTO>> getAssetList(
-            @RequestParam String presentationYear,
-            @RequestParam String taxType,
-            @RequestParam String presentationCode) {
-        List<AssetSummaryDTO> assets = assetService.getAssetList(presentationYear, taxType, presentationCode);
+    @Operation(summary = "Get all assets for a declaration")
+    public ResponseEntity<List<AssetDocument>> getAll(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta) {
+        List<AssetDocument> assets = assetService.findAllByDeclaration(aapresenta, vftipoimpu, cdpresenta);
         return ResponseEntity.ok(assets);
     }
 
-    @GetMapping("/next-sequence")
-    @Operation(summary = "Get next available asset sequence number")
-    public ResponseEntity<Map<String, String>> getNextSequence(
-            @RequestParam String presentationYear,
-            @RequestParam String taxType,
-            @RequestParam String presentationCode) {
-        String nextSequence = assetService.generateNextAssetSequence(presentationYear, taxType, presentationCode);
-        Map<String, String> response = new HashMap<String, String>();
-        response.put("nextSequence", nextSequence);
-        return ResponseEntity.ok(response);
+    @GetMapping("/{cdsecubien}")
+    @Operation(summary = "Get asset by ID")
+    public ResponseEntity<AssetDocument> getById(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta,
+            @PathVariable String cdsecubien) {
+        return assetService.findById(aapresenta, vftipoimpu, cdpresenta, cdsecubien)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    @GetMapping("/totals")
-    @Operation(summary = "Get total declared and verified values")
-    public ResponseEntity<Map<String, BigDecimal>> getTotals(
-            @RequestParam String presentationYear,
-            @RequestParam String taxType,
-            @RequestParam String presentationCode) {
-        BigDecimal totalDeclared = assetService.calculateTotalDeclaredValue(presentationYear, taxType, presentationCode);
-        BigDecimal totalVerified = assetService.calculateTotalVerifiedValue(presentationYear, taxType, presentationCode);
-        
-        Map<String, BigDecimal> totals = new HashMap<String, BigDecimal>();
-        totals.put("totalDeclaredValue", totalDeclared);
-        totals.put("totalVerifiedValue", totalVerified);
-        return ResponseEntity.ok(totals);
+    @PostMapping
+    @Operation(summary = "Create a new asset")
+    public ResponseEntity<AssetDocument> create(@Valid @RequestBody AssetDocumentDTO dto) {
+        AssetDocument created = assetService.create(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @DeleteMapping("/{presentationYear}/{taxType}/{presentationCode}/{assetSequence}")
+    @PutMapping("/{cdsecubien}")
+    @Operation(summary = "Update an existing asset")
+    public ResponseEntity<AssetDocument> update(
+            @PathVariable String cdsecubien,
+            @Valid @RequestBody AssetDocumentDTO dto) {
+        dto.setCdsecubien(cdsecubien);
+        AssetDocument updated = assetService.update(dto);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{cdsecubien}")
     @Operation(summary = "Delete an asset")
-    public ResponseEntity<Void> deleteAsset(
-            @PathVariable String presentationYear,
-            @PathVariable String taxType,
-            @PathVariable String presentationCode,
-            @PathVariable String assetSequence) {
-        assetService.deleteAsset(presentationYear, taxType, presentationCode, assetSequence);
+    public ResponseEntity<Void> delete(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta,
+            @PathVariable String cdsecubien) {
+        assetService.delete(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/next-sequence")
+    @Operation(summary = "Get next asset sequence number")
+    public ResponseEntity<String> getNextSequence(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta) {
+        String nextSeq = assetService.generateNextSequence(aapresenta, vftipoimpu, cdpresenta);
+        return ResponseEntity.ok(nextSeq);
     }
 }

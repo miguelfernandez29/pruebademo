@@ -1,249 +1,104 @@
 package com.example.app.service;
 
-import com.example.app.dto.AssetSummaryDTO;
+import com.example.app.dto.AssetDocumentDTO;
 import com.example.app.entity.AssetDocument;
+import com.example.app.entity.AssetDocumentId;
+import com.example.app.exception.BusinessValidationException;
+import com.example.app.exception.ResourceNotFoundException;
 import com.example.app.repository.AssetDocumentRepository;
-import com.example.app.repository.UrbanPropertyRepository;
-import com.example.app.repository.RuralPropertyRepository;
-import com.example.app.repository.BusinessAssetRepository;
-import com.example.app.repository.OtherAssetRepository;
-import com.example.app.repository.BankAccountRepository;
-import com.example.app.repository.ListedSecuritiesRepository;
-import com.example.app.repository.UnlistedSecuritiesRepository;
-import com.example.app.repository.VehicleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
 @Service
-@Transactional
 public class AssetService {
 
     private final AssetDocumentRepository assetDocumentRepository;
-    private final UrbanPropertyRepository urbanPropertyRepository;
-    private final RuralPropertyRepository ruralPropertyRepository;
-    private final BusinessAssetRepository businessAssetRepository;
-    private final OtherAssetRepository otherAssetRepository;
-    private final BankAccountRepository bankAccountRepository;
-    private final ListedSecuritiesRepository listedSecuritiesRepository;
-    private final UnlistedSecuritiesRepository unlistedSecuritiesRepository;
-    private final VehicleRepository vehicleRepository;
     private final ValidationService validationService;
 
-    private static final Map<String, String> ASSET_NATURE_DESCRIPTIONS = new HashMap<String, String>();
-    
-    static {
-        ASSET_NATURE_DESCRIPTIONS.put("U", "Urban Property");
-        ASSET_NATURE_DESCRIPTIONS.put("R", "Rural Property");
-        ASSET_NATURE_DESCRIPTIONS.put("A", "Business Asset");
-        ASSET_NATURE_DESCRIPTIONS.put("T", "Other Asset");
-        ASSET_NATURE_DESCRIPTIONS.put("C", "Bank Account");
-        ASSET_NATURE_DESCRIPTIONS.put("V", "Listed Securities");
-        ASSET_NATURE_DESCRIPTIONS.put("N", "Unlisted Securities");
-        ASSET_NATURE_DESCRIPTIONS.put("H", "Vehicle");
-    }
-
-    public AssetService(AssetDocumentRepository assetDocumentRepository,
-                        UrbanPropertyRepository urbanPropertyRepository,
-                        RuralPropertyRepository ruralPropertyRepository,
-                        BusinessAssetRepository businessAssetRepository,
-                        OtherAssetRepository otherAssetRepository,
-                        BankAccountRepository bankAccountRepository,
-                        ListedSecuritiesRepository listedSecuritiesRepository,
-                        UnlistedSecuritiesRepository unlistedSecuritiesRepository,
-                        VehicleRepository vehicleRepository,
-                        ValidationService validationService) {
+    @Autowired
+    public AssetService(AssetDocumentRepository assetDocumentRepository, ValidationService validationService) {
         this.assetDocumentRepository = assetDocumentRepository;
-        this.urbanPropertyRepository = urbanPropertyRepository;
-        this.ruralPropertyRepository = ruralPropertyRepository;
-        this.businessAssetRepository = businessAssetRepository;
-        this.otherAssetRepository = otherAssetRepository;
-        this.bankAccountRepository = bankAccountRepository;
-        this.listedSecuritiesRepository = listedSecuritiesRepository;
-        this.unlistedSecuritiesRepository = unlistedSecuritiesRepository;
-        this.vehicleRepository = vehicleRepository;
         this.validationService = validationService;
     }
 
-    public List<AssetSummaryDTO> getAssetList(String presentationYear, String taxType, String presentationCode) {
-        List<AssetDocument> documents = assetDocumentRepository
-                .findByPresentationYearAndTaxTypeAndPresentationCode(presentationYear, taxType, presentationCode);
-        
-        List<AssetSummaryDTO> summaries = new ArrayList<AssetSummaryDTO>();
-        long id = 1;
-        
-        for (AssetDocument doc : documents) {
-            AssetSummaryDTO summary = new AssetSummaryDTO();
-            summary.setId(id++);
-            summary.setAssetSequence(doc.getAssetSequence());
-            summary.setAssetNature(doc.getAssetNature());
-            summary.setAssetNatureDescription(ASSET_NATURE_DESCRIPTIONS.get(doc.getAssetNature()));
-            summary.setDeclaredValue(doc.getDeclaredValue());
-            summary.setVerifiedValue(doc.getVerifiedValue());
-            summary.setPresentationYear(doc.getPresentationYear());
-            summary.setTaxType(doc.getTaxType());
-            summary.setPresentationCode(doc.getPresentationCode());
-            
-            if (doc.getVerifiedValue() != null && doc.getDeclaredValue() != null) {
-                if (doc.getDeclaredValue().compareTo(doc.getVerifiedValue()) >= 0) {
-                    summary.setConformityStatus("Conforming");
-                } else {
-                    summary.setConformityStatus("Non-Conforming");
-                }
-            } else {
-                summary.setConformityStatus("Pending");
-            }
-            
-            summaries.add(summary);
-        }
-        
-        return summaries;
+    public List<AssetDocument> findAllByDeclaration(String aapresenta, String vftipoimpu, String cdpresenta) {
+        return assetDocumentRepository.findByAapresentaAndVftipoimpu AndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
     }
 
-    public String generateNextAssetSequence(String presentationYear, String taxType, String presentationCode) {
-        Integer nextSeq = assetDocumentRepository.findNextAssetSequence(presentationYear, taxType, presentationCode);
-        if (nextSeq == null) {
-            nextSeq = 1;
-        }
-        return validationService.padLeft(String.valueOf(nextSeq), 3, '0');
-    }
-
-    public String getAssetNatureDescription(String assetNature) {
-        return ASSET_NATURE_DESCRIPTIONS.get(assetNature);
-    }
-
-    public String getControlBlockForNature(String assetNature, boolean isAffectedAsset) {
-        if (isAffectedAsset) {
-            if ("U".equals(assetNature)) {
-                return "B_GATA_BIENURBA";
-            } else if ("R".equals(assetNature)) {
-                return "B_GATA_BIENRUST";
-            } else {
-                throw new IllegalArgumentException("For affected assets, only U (Urban) or R (Rural) are allowed");
-            }
-        }
-        
-        if ("U".equals(assetNature)) {
-            return "B_GATA_BIENURBA";
-        } else if ("R".equals(assetNature)) {
-            return "B_GATA_BIENRUST";
-        } else if ("T".equals(assetNature)) {
-            return "B_GATA_BIENOTRO";
-        } else if ("A".equals(assetNature)) {
-            return "B_GATA_BIENACEM";
-        } else if ("C".equals(assetNature)) {
-            return "B_GATA_BIENCUBA";
-        } else if ("V".equals(assetNature)) {
-            return "B_GATA_BIENVANE";
-        } else if ("N".equals(assetNature)) {
-            return "B_GATA_BIENVANO";
-        } else {
-            return "B_GATA_BIENVEHI";
-        }
-    }
-
-    public void validateAssetSequence(String presentationYear, String taxType, 
-                                       String presentationCode, String assetSequence,
-                                       String operation) {
-        if (assetSequence == null || assetSequence.trim().isEmpty()) {
-            throw new IllegalArgumentException("Asset sequence is required");
-        }
-        
-        String paddedSequence = validationService.padLeft(assetSequence, 3, '0');
-        
-        boolean exists = assetDocumentRepository
-                .findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                        presentationYear, taxType, presentationCode, paddedSequence)
-                .isPresent();
-        
-        if ("I".equals(operation) && exists) {
-            throw new IllegalArgumentException("Asset already exists. Use modify operation.");
-        }
-        
-        if (("M".equals(operation) || "S".equals(operation)) && !exists) {
-            throw new IllegalArgumentException("Asset does not exist.");
-        }
-    }
-
-    public BigDecimal calculateTotalDeclaredValue(String presentationYear, String taxType, String presentationCode) {
-        List<AssetDocument> documents = assetDocumentRepository
-                .findByPresentationYearAndTaxTypeAndPresentationCode(presentationYear, taxType, presentationCode);
-        
-        BigDecimal total = BigDecimal.ZERO;
-        for (AssetDocument doc : documents) {
-            if (doc.getDeclaredValue() != null) {
-                total = total.add(doc.getDeclaredValue());
-            }
-        }
-        return total;
-    }
-
-    public BigDecimal calculateTotalVerifiedValue(String presentationYear, String taxType, String presentationCode) {
-        List<AssetDocument> documents = assetDocumentRepository
-                .findByPresentationYearAndTaxTypeAndPresentationCode(presentationYear, taxType, presentationCode);
-        
-        BigDecimal total = BigDecimal.ZERO;
-        for (AssetDocument doc : documents) {
-            if (doc.getVerifiedValue() != null) {
-                total = total.add(doc.getVerifiedValue());
-            }
-        }
-        return total;
+    public Optional<AssetDocument> findById(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
+        AssetDocumentId id = new AssetDocumentId(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
+        return assetDocumentRepository.findById(id);
     }
 
     @Transactional
-    public void deleteAsset(String presentationYear, String taxType, 
-                            String presentationCode, String assetSequence) {
-        AssetDocument.AssetDocumentId id = new AssetDocument.AssetDocumentId();
-        id.setPresentationYear(presentationYear);
-        id.setTaxType(taxType);
-        id.setPresentationCode(presentationCode);
-        id.setAssetSequence(assetSequence);
-        
-        AssetDocument doc = assetDocumentRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Asset not found"));
-        
-        String nature = doc.getAssetNature();
-        
-        if ("U".equals(nature)) {
-            urbanPropertyRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(urbanPropertyRepository::delete);
-        } else if ("R".equals(nature)) {
-            ruralPropertyRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(ruralPropertyRepository::delete);
-        } else if ("A".equals(nature)) {
-            businessAssetRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(businessAssetRepository::delete);
-        } else if ("T".equals(nature)) {
-            otherAssetRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(otherAssetRepository::delete);
-        } else if ("C".equals(nature)) {
-            bankAccountRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(bankAccountRepository::delete);
-        } else if ("V".equals(nature)) {
-            listedSecuritiesRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(listedSecuritiesRepository::delete);
-        } else if ("N".equals(nature)) {
-            unlistedSecuritiesRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(unlistedSecuritiesRepository::delete);
+    public AssetDocument create(AssetDocumentDTO dto) {
+        validationService.validateNatureType(dto.getCdnatbien2());
+
+        String cdsecubien = dto.getCdsecubien();
+        if (cdsecubien == null || cdsecubien.trim().isEmpty()) {
+            Integer nextSeq = assetDocumentRepository.findNextSequence(dto.getAapresenta(), dto.getVftipoimpu(), dto.getCdpresenta());
+            cdsecubien = validationService.padLeft(String.valueOf(nextSeq), 3, '0');
         } else {
-            vehicleRepository.findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-                    presentationYear, taxType, presentationCode, assetSequence)
-                    .ifPresent(vehicleRepository::delete);
+            cdsecubien = validationService.padLeft(cdsecubien, 3, '0');
         }
-        
-        assetDocumentRepository.delete(doc);
+
+        long count = assetDocumentRepository.countByAapresentaAndVftipoimpu AndCdpresentaAndCdsecubien(
+                dto.getAapresenta(), dto.getVftipoimpu(), dto.getCdpresenta(), cdsecubien);
+        if (count > 0) {
+            throw new BusinessValidationException("Registro ya existe. Entre por modificación.");
+        }
+
+        AssetDocument entity = new AssetDocument();
+        entity.setAapresenta(dto.getAapresenta());
+        entity.setVftipoimpu(dto.getVftipoimpu());
+        entity.setCdpresenta(dto.getCdpresenta());
+        entity.setCdsecubien(cdsecubien);
+        entity.setCdnatbien2(dto.getCdnatbien2());
+        entity.setCdsecuacem(dto.getCdsecuacem());
+        entity.setFccomproba(dto.getFccomproba());
+        entity.setIdcomproba(dto.getIdcomproba());
+        entity.setPtdeclarad(dto.getPtdeclarad());
+        entity.setPtcomproba(dto.getPtcomproba());
+
+        return assetDocumentRepository.save(entity);
+    }
+
+    @Transactional
+    public AssetDocument update(AssetDocumentDTO dto) {
+        AssetDocumentId id = new AssetDocumentId(dto.getAapresenta(), dto.getVftipoimpu(), dto.getCdpresenta(), dto.getCdsecubien());
+        AssetDocument entity = assetDocumentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Bien no existente."));
+
+        entity.setCdnatbien2(dto.getCdnatbien2());
+        entity.setCdsecuacem(dto.getCdsecuacem());
+        entity.setFccomproba(dto.getFccomproba());
+        entity.setIdcomproba(dto.getIdcomproba());
+        entity.setPtdeclarad(dto.getPtdeclarad());
+        entity.setPtcomproba(dto.getPtcomproba());
+
+        return assetDocumentRepository.save(entity);
+    }
+
+    @Transactional
+    public void delete(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
+        AssetDocumentId id = new AssetDocumentId(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
+        if (!assetDocumentRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Bien no existente.");
+        }
+        assetDocumentRepository.deleteById(id);
+    }
+
+    public boolean isAssetValuated(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
+        Optional<AssetDocument> valuated = assetDocumentRepository.findValuatedAsset(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
+        return valuated.isPresent();
+    }
+
+    public String generateNextSequence(String aapresenta, String vftipoimpu, String cdpresenta) {
+        Integer nextSeq = assetDocumentRepository.findNextSequence(aapresenta, vftipoimpu, cdpresenta);
+        return validationService.padLeft(String.valueOf(nextSeq), 3, '0');
     }
 }

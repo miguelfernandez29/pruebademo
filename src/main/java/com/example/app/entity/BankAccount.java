@@ -1,194 +1,132 @@
 package com.example.app.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "GATA_BIENCUBA")
-@IdClass(BankAccount.BankAccountId.class)
-public class BankAccount {
+@IdClass(AssetDocumentId.class)
+public class BankAccount implements Serializable {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
-    private String presentationYear;
+    private String aapresenta;
 
     @Id
     @Column(name = "VFTIPOIMPU", length = 2)
-    private String taxType;
+    private String vftipoimpu;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 10)
-    private String presentationCode;
+    @Column(name = "CDPRESENTA", length = 14)
+    private String cdpresenta;
 
     @Id
     @Column(name = "CDSECUBIEN", length = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
-    @Column(name = "TLENTIDEPO", length = 100)
-    private String financialInstitution;
+    @Column(name = "TLENTIDEPO", length = 50)
+    private String tlentidepo;
 
     @Column(name = "TLDEPOSITO", length = 34)
-    private String accountNumber;
+    private String tldeposito;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
-    private BigDecimal declaredValue;
+    private BigDecimal ptdeclarad;
 
     @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
-    private BigDecimal verifiedValue;
+    private BigDecimal ptcomproba;
 
     @Column(name = "PCTITULARI", precision = 5, scale = 2)
-    private BigDecimal ownershipPercentage;
+    private BigDecimal pctitulari;
 
-    @Column(name = "TLOBSERVAC", length = 500)
-    private String observations;
+    @Column(name = "TLOBSERVAC", length = 200)
+    private String tlobservac;
 
     public BankAccount() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getFinancialInstitution() {
-        return financialInstitution;
+    public String getTlentidepo() {
+        return tlentidepo;
     }
 
-    public void setFinancialInstitution(String financialInstitution) {
-        this.financialInstitution = financialInstitution;
+    public void setTlentidepo(String tlentidepo) {
+        this.tlentidepo = tlentidepo;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getTldeposito() {
+        return tldeposito;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setTldeposito(String tldeposito) {
+        this.tldeposito = tldeposito;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public BigDecimal getOwnershipPercentage() {
-        return ownershipPercentage;
+    public BigDecimal getPctitulari() {
+        return pctitulari;
     }
 
-    public void setOwnershipPercentage(BigDecimal ownershipPercentage) {
-        this.ownershipPercentage = ownershipPercentage;
+    public void setPctitulari(BigDecimal pctitulari) {
+        this.pctitulari = pctitulari;
     }
 
-    public String getObservations() {
-        return observations;
+    public String getTlobservac() {
+        return tlobservac;
     }
 
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public static class BankAccountId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
-
-        public BankAccountId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            BankAccountId that = (BankAccountId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            return result;
-        }
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
     }
 }

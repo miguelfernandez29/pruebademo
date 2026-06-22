@@ -1,205 +1,132 @@
 package com.example.app.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "GATA_BIENVANE")
-@IdClass(ListedSecurities.ListedSecuritiesId.class)
-public class ListedSecurities {
+@IdClass(AssetDocumentId.class)
+public class ListedSecurities implements Serializable {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
-    private String presentationYear;
+    private String aapresenta;
 
     @Id
     @Column(name = "VFTIPOIMPU", length = 2)
-    private String taxType;
+    private String vftipoimpu;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 10)
-    private String presentationCode;
+    @Column(name = "CDPRESENTA", length = 14)
+    private String cdpresenta;
 
     @Id
     @Column(name = "CDSECUBIEN", length = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
-    @Column(name = "DSBIENVANE", length = 200)
-    private String description;
+    @Column(name = "DSBIENVANE", length = 100)
+    private String dsbienvane;
 
     @Column(name = "PTCOTIZACI", precision = 15, scale = 2)
-    private BigDecimal quotationPrice;
+    private BigDecimal ptcotizaci;
 
     @Column(name = "NMUNIDADES")
-    private Integer numberOfUnits;
+    private Integer nmunidades;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
-    private BigDecimal declaredValue;
+    private BigDecimal ptdeclarad;
 
     @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
-    private BigDecimal verifiedValue;
+    private BigDecimal ptcomproba;
 
-    @Column(name = "PCTRANSMIS", precision = 5, scale = 2)
-    private BigDecimal transmissionPercentage;
-
-    @Column(name = "TLOBSERVAC", length = 500)
-    private String observations;
+    @Column(name = "TLOBSERVAC", length = 200)
+    private String tlobservac;
 
     public ListedSecurities() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getDescription() {
-        return description;
+    public String getDsbienvane() {
+        return dsbienvane;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setDsbienvane(String dsbienvane) {
+        this.dsbienvane = dsbienvane;
     }
 
-    public BigDecimal getQuotationPrice() {
-        return quotationPrice;
+    public BigDecimal getPtcotizaci() {
+        return ptcotizaci;
     }
 
-    public void setQuotationPrice(BigDecimal quotationPrice) {
-        this.quotationPrice = quotationPrice;
+    public void setPtcotizaci(BigDecimal ptcotizaci) {
+        this.ptcotizaci = ptcotizaci;
     }
 
-    public Integer getNumberOfUnits() {
-        return numberOfUnits;
+    public Integer getNmunidades() {
+        return nmunidades;
     }
 
-    public void setNumberOfUnits(Integer numberOfUnits) {
-        this.numberOfUnits = numberOfUnits;
+    public void setNmunidades(Integer nmunidades) {
+        this.nmunidades = nmunidades;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public BigDecimal getTransmissionPercentage() {
-        return transmissionPercentage;
+    public String getTlobservac() {
+        return tlobservac;
     }
 
-    public void setTransmissionPercentage(BigDecimal transmissionPercentage) {
-        this.transmissionPercentage = transmissionPercentage;
-    }
-
-    public String getObservations() {
-        return observations;
-    }
-
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public static class ListedSecuritiesId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
-
-        public ListedSecuritiesId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            ListedSecuritiesId that = (ListedSecuritiesId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            return result;
-        }
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
     }
 }

@@ -1,143 +1,176 @@
 package com.example.app.controller.web;
 
 import com.example.app.dto.UrbanPropertyDTO;
+import com.example.app.entity.UrbanProperty;
 import com.example.app.service.UrbanPropertyService;
-import com.example.app.repository.ProvinceRepository;
+import com.example.app.service.ReferenceDataService;
+import com.example.app.exception.BusinessValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
-import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 @RequestMapping("/urban-properties")
 public class UrbanPropertyWebController {
 
     private final UrbanPropertyService urbanPropertyService;
-    private final ProvinceRepository provinceRepository;
+    private final ReferenceDataService referenceDataService;
 
-    public UrbanPropertyWebController(UrbanPropertyService urbanPropertyService,
-                                       ProvinceRepository provinceRepository) {
+    @Autowired
+    public UrbanPropertyWebController(UrbanPropertyService urbanPropertyService, ReferenceDataService referenceDataService) {
         this.urbanPropertyService = urbanPropertyService;
-        this.provinceRepository = provinceRepository;
+        this.referenceDataService = referenceDataService;
     }
 
     @GetMapping
-    public String list(Model model) {
-        model.addAttribute("properties", urbanPropertyService.findAll());
-        model.addAttribute("title", "Urban Properties");
+    public String list(
+            @RequestParam(defaultValue = "2024") String aapresenta,
+            @RequestParam(defaultValue = "01") String vftipoimpu,
+            @RequestParam(defaultValue = "00000000000001") String cdpresenta,
+            Model model) {
+        List<UrbanProperty> properties = urbanPropertyService.findAllByDeclaration(aapresenta, vftipoimpu, cdpresenta);
+        model.addAttribute("properties", properties);
+        model.addAttribute("aapresenta", aapresenta);
+        model.addAttribute("vftipoimpu", vftipoimpu);
+        model.addAttribute("cdpresenta", cdpresenta);
         return "urban-properties/list";
     }
 
-    @GetMapping("/add")
-    public String showAddForm(@RequestParam String presentationYear,
-                              @RequestParam String taxType,
-                              @RequestParam String presentationCode,
-                              @RequestParam String assetSequence,
-                              Model model) {
+    @GetMapping("/new")
+    public String newProperty(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta,
+            @RequestParam String cdsecubien,
+            Model model) {
         UrbanPropertyDTO dto = new UrbanPropertyDTO();
-        dto.setPresentationYear(presentationYear);
-        dto.setTaxType(taxType);
-        dto.setPresentationCode(presentationCode);
-        dto.setAssetSequence(assetSequence);
-        dto.setCountryCode("ESP");
-        dto.setTransmissionPercentage(new BigDecimal("100"));
-        dto.setNumberOfUnits(1);
-        
-        model.addAttribute("property", dto);
-        model.addAttribute("provinces", provinceRepository.findAll());
-        model.addAttribute("title", "Add Urban Property");
-        model.addAttribute("action", "add");
-        
+        dto.setAapresenta(aapresenta);
+        dto.setVftipoimpu(vftipoimpu);
+        dto.setCdpresenta(cdpresenta);
+        dto.setCdsecubien(cdsecubien);
+        dto.setCdpais("ESP");
+
+        populateFormModel(model, dto, true);
         return "urban-properties/form";
     }
 
-    @GetMapping("/edit/{presentationYear}/{taxType}/{presentationCode}/{assetSequence}")
-    public String showEditForm(@PathVariable String presentationYear,
-                               @PathVariable String taxType,
-                               @PathVariable String presentationCode,
-                               @PathVariable String assetSequence,
-                               Model model) {
-        UrbanPropertyDTO dto = urbanPropertyService.findById(presentationYear, taxType, presentationCode, assetSequence)
-                .orElseThrow(() -> new IllegalArgumentException("Urban property not found"));
-        
-        model.addAttribute("property", dto);
-        model.addAttribute("provinces", provinceRepository.findAll());
-        model.addAttribute("title", "Edit Urban Property");
-        model.addAttribute("action", "edit");
-        
+    @GetMapping("/edit/{cdsecubien}")
+    public String edit(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta,
+            @PathVariable String cdsecubien,
+            Model model) {
+        UrbanProperty property = urbanPropertyService.findById(aapresenta, vftipoimpu, cdpresenta, cdsecubien)
+                .orElseThrow(() -> new RuntimeException("Bien urbano no encontrado"));
+
+        UrbanPropertyDTO dto = mapEntityToDto(property);
+        populateFormModel(model, dto, false);
         return "urban-properties/form";
     }
 
     @PostMapping("/save")
-    public String save(@Valid @ModelAttribute("property") UrbanPropertyDTO dto,
-                       BindingResult bindingResult,
-                       @RequestParam String action,
-                       Model model,
-                       RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            model.addAttribute("provinces", provinceRepository.findAll());
-            model.addAttribute("title", "add".equals(action) ? "Add Urban Property" : "Edit Urban Property");
-            model.addAttribute("action", action);
+    public String save(
+            @Valid @ModelAttribute("property") UrbanPropertyDTO dto,
+            BindingResult result,
+            Model model,
+            RedirectAttributes redirectAttributes) {
+        if (result.hasErrors()) {
+            populateFormModel(model, dto, false);
             return "urban-properties/form";
         }
-        
+
         try {
-            if ("add".equals(action)) {
-                urbanPropertyService.create(dto);
-                redirectAttributes.addFlashAttribute("successMessage", "Urban property created successfully");
-            } else {
+            boolean exists = urbanPropertyService.findById(dto.getAapresenta(), dto.getVftipoimpu(), dto.getCdpresenta(), dto.getCdsecubien()).isPresent();
+            if (exists) {
                 urbanPropertyService.update(dto);
-                redirectAttributes.addFlashAttribute("successMessage", "Urban property updated successfully");
+                redirectAttributes.addFlashAttribute("successMessage", "Bien urbano actualizado correctamente.");
+            } else {
+                urbanPropertyService.create(dto);
+                redirectAttributes.addFlashAttribute("successMessage", "Bien urbano creado correctamente.");
             }
-        } catch (Exception e) {
+        } catch (BusinessValidationException e) {
             model.addAttribute("errorMessage", e.getMessage());
-            model.addAttribute("provinces", provinceRepository.findAll());
-            model.addAttribute("title", "add".equals(action) ? "Add Urban Property" : "Edit Urban Property");
-            model.addAttribute("action", action);
+            populateFormModel(model, dto, false);
             return "urban-properties/form";
         }
-        
-        return "redirect:/assets?presentationYear=" + dto.getPresentationYear() + 
-               "&taxType=" + dto.getTaxType() + "&presentationCode=" + dto.getPresentationCode();
+
+        return "redirect:/assets?aapresenta=" + dto.getAapresenta() +
+                "&vftipoimpu=" + dto.getVftipoimpu() +
+                "&cdpresenta=" + dto.getCdpresenta();
     }
 
-    @GetMapping("/view/{presentationYear}/{taxType}/{presentationCode}/{assetSequence}")
-    public String view(@PathVariable String presentationYear,
-                       @PathVariable String taxType,
-                       @PathVariable String presentationCode,
-                       @PathVariable String assetSequence,
-                       Model model) {
-        UrbanPropertyDTO dto = urbanPropertyService.findById(presentationYear, taxType, presentationCode, assetSequence)
-                .orElseThrow(() -> new IllegalArgumentException("Urban property not found"));
-        
-        model.addAttribute("property", dto);
-        model.addAttribute("title", "Urban Property Details");
-        
-        return "urban-properties/view";
-    }
-
-    @PostMapping("/delete/{presentationYear}/{taxType}/{presentationCode}/{assetSequence}")
-    public String delete(@PathVariable String presentationYear,
-                         @PathVariable String taxType,
-                         @PathVariable String presentationCode,
-                         @PathVariable String assetSequence,
-                         RedirectAttributes redirectAttributes) {
+    @PostMapping("/delete/{cdsecubien}")
+    public String delete(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta,
+            @PathVariable String cdsecubien,
+            RedirectAttributes redirectAttributes) {
         try {
-            urbanPropertyService.delete(presentationYear, taxType, presentationCode, assetSequence);
-            redirectAttributes.addFlashAttribute("successMessage", "Urban property deleted successfully");
+            urbanPropertyService.delete(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
+            redirectAttributes.addFlashAttribute("successMessage", "Bien urbano eliminado correctamente.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Error deleting property: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", "Error al eliminar: " + e.getMessage());
         }
-        return "redirect:/assets?presentationYear=" + presentationYear + 
-               "&taxType=" + taxType + "&presentationCode=" + presentationCode;
+        return "redirect:/assets?aapresenta=" + aapresenta +
+                "&vftipoimpu=" + vftipoimpu +
+                "&cdpresenta=" + cdpresenta;
+    }
+
+    private void populateFormModel(Model model, UrbanPropertyDTO dto, boolean isNew) {
+        model.addAttribute("property", dto);
+        model.addAttribute("provinces", referenceDataService.getAllProvinces());
+        model.addAttribute("isNew", isNew);
+    }
+
+    private UrbanPropertyDTO mapEntityToDto(UrbanProperty entity) {
+        UrbanPropertyDTO dto = new UrbanPropertyDTO();
+        dto.setAapresenta(entity.getAapresenta());
+        dto.setVftipoimpu(entity.getVftipoimpu());
+        dto.setCdpresenta(entity.getCdpresenta());
+        dto.setCdsecubien(entity.getCdsecubien());
+        dto.setCdprovinci(entity.getCdprovinci());
+        dto.setCdmunicipi(entity.getCdmunicipi());
+        dto.setCdpais(entity.getCdpais());
+        dto.setTlrefecata(entity.getTlrefecata());
+        dto.setCdtipobien(entity.getCdtipobien());
+        dto.setCdtipoviap(entity.getCdtipoviap());
+        dto.setTlnombviap(entity.getTlnombviap());
+        dto.setTlnumeviap(entity.getTlnumeviap());
+        dto.setTlcodipost(entity.getTlcodipost());
+        dto.setTlescalera(entity.getTlescalera());
+        dto.setTlpiso(entity.getTlpiso());
+        dto.setTlpuerta(entity.getTlpuerta());
+        dto.setVfduplicad(entity.getVfduplicad());
+        dto.setAaconstruc(entity.getAaconstruc());
+        dto.setCdsituaci1(entity.getCdsituaci1());
+        dto.setCdsituaci2(entity.getCdsituaci2());
+        dto.setItarrendam(entity.getItarrendam());
+        dto.setAacontarre(entity.getAacontarre());
+        dto.setItprotofic(entity.getItprotofic());
+        dto.setItdescalif(entity.getItdescalif());
+        dto.setItvivihabi(entity.getItvivihabi());
+        dto.setPtvivihabi(entity.getPtvivihabi());
+        dto.setNmunidades(entity.getNmunidades());
+        dto.setNmsuperfic(entity.getNmsuperfic());
+        dto.setPtmaxventa(entity.getPtmaxventa());
+        dto.setPtdeclarad(entity.getPtdeclarad());
+        dto.setPtcomproba(entity.getPtcomproba());
+        dto.setPctransmis(entity.getPctransmis());
+        dto.setCdposbien2(entity.getCdposbien2());
+        dto.setItvalorref(entity.getItvalorref());
+        dto.setItvrvalido(entity.getItvrvalido());
+        dto.setItvalbdbi(entity.getItvalbdbi());
+        dto.setPtvalorref(entity.getPtvalorref());
+        dto.setCdzonaurba(entity.getCdzonaurba());
+        dto.setTlobservac(entity.getTlobservac());
+        return dto;
     }
 }

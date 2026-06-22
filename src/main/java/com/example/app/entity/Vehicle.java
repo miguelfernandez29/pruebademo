@@ -1,239 +1,177 @@
 package com.example.app.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "GATA_BIENVEHI")
-@IdClass(Vehicle.VehicleId.class)
-public class Vehicle {
+@IdClass(AssetDocumentId.class)
+public class Vehicle implements Serializable {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
-    private String presentationYear;
+    private String aapresenta;
 
     @Id
     @Column(name = "VFTIPOIMPU", length = 2)
-    private String taxType;
+    private String vftipoimpu;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 10)
-    private String presentationCode;
+    @Column(name = "CDPRESENTA", length = 14)
+    private String cdpresenta;
 
     @Id
     @Column(name = "CDSECUBIEN", length = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
     @Column(name = "FCMATRICUL")
-    private Date registrationDate;
-
-    @Column(name = "CDVEHITIPO", length = 1)
-    private String vehicleType;
-
-    @Column(name = "CDVEHIMARC", length = 5)
-    private String vehicleBrand;
-
-    @Column(name = "CDVEHIMODE", length = 10)
-    private String vehicleModel;
-
-    @Column(name = "NMCILINDCC")
-    private Integer engineDisplacement;
-
-    @Column(name = "PTDECLARAD", precision = 15, scale = 2)
-    private BigDecimal declaredValue;
-
-    @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
-    private BigDecimal verifiedValue;
-
-    @Column(name = "PCTITULARI", precision = 5, scale = 2)
-    private BigDecimal ownershipPercentage;
+    private LocalDate fcmatricul;
 
     @Column(name = "FCVEHICATA")
-    private Date catalogDate;
+    private LocalDate fcvehicata;
 
-    @Column(name = "TLOBSERVAC", length = 500)
-    private String observations;
+    @Column(name = "CDVEHITIPO", length = 1)
+    private String cdvehitipo;
+
+    @Column(name = "CDVEHIMARC", length = 3)
+    private String cdvehimarc;
+
+    @Column(name = "CDVEHIMODE", length = 6)
+    private String cdvehimode;
+
+    @Column(name = "NMCILINDCC")
+    private Integer nmcilindcc;
+
+    @Column(name = "PTDECLARAD", precision = 15, scale = 2)
+    private BigDecimal ptdeclarad;
+
+    @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
+    private BigDecimal ptcomproba;
+
+    @Column(name = "PCTITULARI", precision = 5, scale = 2)
+    private BigDecimal pctitulari;
+
+    @Column(name = "TLOBSERVAC", length = 200)
+    private String tlobservac;
 
     public Vehicle() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public Date getRegistrationDate() {
-        return registrationDate;
+    public LocalDate getFcmatricul() {
+        return fcmatricul;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setFcmatricul(LocalDate fcmatricul) {
+        this.fcmatricul = fcmatricul;
     }
 
-    public String getVehicleType() {
-        return vehicleType;
+    public LocalDate getFcvehicata() {
+        return fcvehicata;
     }
 
-    public void setVehicleType(String vehicleType) {
-        this.vehicleType = vehicleType;
+    public void setFcvehicata(LocalDate fcvehicata) {
+        this.fcvehicata = fcvehicata;
     }
 
-    public String getVehicleBrand() {
-        return vehicleBrand;
+    public String getCdvehitipo() {
+        return cdvehitipo;
     }
 
-    public void setVehicleBrand(String vehicleBrand) {
-        this.vehicleBrand = vehicleBrand;
+    public void setCdvehitipo(String cdvehitipo) {
+        this.cdvehitipo = cdvehitipo;
     }
 
-    public String getVehicleModel() {
-        return vehicleModel;
+    public String getCdvehimarc() {
+        return cdvehimarc;
     }
 
-    public void setVehicleModel(String vehicleModel) {
-        this.vehicleModel = vehicleModel;
+    public void setCdvehimarc(String cdvehimarc) {
+        this.cdvehimarc = cdvehimarc;
     }
 
-    public Integer getEngineDisplacement() {
-        return engineDisplacement;
+    public String getCdvehimode() {
+        return cdvehimode;
     }
 
-    public void setEngineDisplacement(Integer engineDisplacement) {
-        this.engineDisplacement = engineDisplacement;
+    public void setCdvehimode(String cdvehimode) {
+        this.cdvehimode = cdvehimode;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public Integer getNmcilindcc() {
+        return nmcilindcc;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setNmcilindcc(Integer nmcilindcc) {
+        this.nmcilindcc = nmcilindcc;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getOwnershipPercentage() {
-        return ownershipPercentage;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setOwnershipPercentage(BigDecimal ownershipPercentage) {
-        this.ownershipPercentage = ownershipPercentage;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public Date getCatalogDate() {
-        return catalogDate;
+    public BigDecimal getPctitulari() {
+        return pctitulari;
     }
 
-    public void setCatalogDate(Date catalogDate) {
-        this.catalogDate = catalogDate;
+    public void setPctitulari(BigDecimal pctitulari) {
+        this.pctitulari = pctitulari;
     }
 
-    public String getObservations() {
-        return observations;
+    public String getTlobservac() {
+        return tlobservac;
     }
 
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public static class VehicleId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
-
-        public VehicleId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            VehicleId that = (VehicleId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            return result;
-        }
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
     }
 }

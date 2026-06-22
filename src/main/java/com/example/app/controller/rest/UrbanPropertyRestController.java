@@ -1,83 +1,77 @@
 package com.example.app.controller.rest;
 
 import com.example.app.dto.UrbanPropertyDTO;
+import com.example.app.entity.UrbanProperty;
 import com.example.app.service.UrbanPropertyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/urban-properties")
-@Tag(name = "Urban Properties", description = "Urban property management operations")
+@Tag(name = "Urban Properties", description = "Urban property management API")
 public class UrbanPropertyRestController {
 
     private final UrbanPropertyService urbanPropertyService;
 
+    @Autowired
     public UrbanPropertyRestController(UrbanPropertyService urbanPropertyService) {
         this.urbanPropertyService = urbanPropertyService;
     }
 
     @GetMapping
-    @Operation(summary = "Get all urban properties")
-    public ResponseEntity<List<UrbanPropertyDTO>> findAll() {
-        return ResponseEntity.ok(urbanPropertyService.findAll());
+    @Operation(summary = "Get all urban properties for a declaration")
+    public ResponseEntity<List<UrbanProperty>> getAll(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta) {
+        List<UrbanProperty> properties = urbanPropertyService.findAllByDeclaration(aapresenta, vftipoimpu, cdpresenta);
+        return ResponseEntity.ok(properties);
     }
 
-    @GetMapping("/{presentationYear}/{taxType}/{presentationCode}/{assetSequence}")
+    @GetMapping("/{cdsecubien}")
     @Operation(summary = "Get urban property by ID")
-    public ResponseEntity<UrbanPropertyDTO> findById(
-            @PathVariable String presentationYear,
-            @PathVariable String taxType,
-            @PathVariable String presentationCode,
-            @PathVariable String assetSequence) {
-        return urbanPropertyService.findById(presentationYear, taxType, presentationCode, assetSequence)
+    public ResponseEntity<UrbanProperty> getById(
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta,
+            @PathVariable String cdsecubien) {
+        return urbanPropertyService.findById(aapresenta, vftipoimpu, cdpresenta, cdsecubien)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
     @Operation(summary = "Create a new urban property")
-    public ResponseEntity<UrbanPropertyDTO> create(@Valid @RequestBody UrbanPropertyDTO dto) {
-        UrbanPropertyDTO created = urbanPropertyService.create(dto);
+    public ResponseEntity<UrbanProperty> create(@Valid @RequestBody UrbanPropertyDTO dto) {
+        UrbanProperty created = urbanPropertyService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PutMapping("/{presentationYear}/{taxType}/{presentationCode}/{assetSequence}")
-    @Operation(summary = "Update an urban property")
-    public ResponseEntity<UrbanPropertyDTO> update(
-            @PathVariable String presentationYear,
-            @PathVariable String taxType,
-            @PathVariable String presentationCode,
-            @PathVariable String assetSequence,
+    @PutMapping("/{cdsecubien}")
+    @Operation(summary = "Update an existing urban property")
+    public ResponseEntity<UrbanProperty> update(
+            @PathVariable String cdsecubien,
             @Valid @RequestBody UrbanPropertyDTO dto) {
-        dto.setPresentationYear(presentationYear);
-        dto.setTaxType(taxType);
-        dto.setPresentationCode(presentationCode);
-        dto.setAssetSequence(assetSequence);
-        UrbanPropertyDTO updated = urbanPropertyService.update(dto);
+        dto.setCdsecubien(cdsecubien);
+        UrbanProperty updated = urbanPropertyService.update(dto);
         return ResponseEntity.ok(updated);
     }
 
-    @DeleteMapping("/{presentationYear}/{taxType}/{presentationCode}/{assetSequence}")
+    @DeleteMapping("/{cdsecubien}")
     @Operation(summary = "Delete an urban property")
     public ResponseEntity<Void> delete(
-            @PathVariable String presentationYear,
-            @PathVariable String taxType,
-            @PathVariable String presentationCode,
-            @PathVariable String assetSequence) {
-        urbanPropertyService.delete(presentationYear, taxType, presentationCode, assetSequence);
+            @RequestParam String aapresenta,
+            @RequestParam String vftipoimpu,
+            @RequestParam String cdpresenta,
+            @PathVariable String cdsecubien) {
+        urbanPropertyService.delete(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
         return ResponseEntity.noContent().build();
     }
 }

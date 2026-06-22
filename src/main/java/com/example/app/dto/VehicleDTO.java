@@ -1,212 +1,187 @@
 package com.example.app.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 public class VehicleDTO {
 
-    @NotBlank(message = "Presentation year is required")
+    @NotBlank(message = "Año de presentación es obligatorio")
     @Size(max = 4)
-    private String presentationYear;
+    private String aapresenta;
 
-    @NotBlank(message = "Tax type is required")
+    @NotBlank(message = "Tipo de impuesto es obligatorio")
     @Size(max = 2)
-    private String taxType;
+    private String vftipoimpu;
 
-    @NotBlank(message = "Presentation code is required")
-    @Size(max = 10)
-    private String presentationCode;
+    @NotBlank(message = "Código de presentación es obligatorio")
+    @Size(max = 14)
+    private String cdpresenta;
 
-    @NotBlank(message = "Asset sequence is required")
     @Size(max = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
-    private Date registrationDate;
+    private LocalDate fcmatricul;
+    private LocalDate fcvehicata;
 
     @Size(max = 1)
-    private String vehicleType;
+    private String cdvehitipo;
 
-    private String vehicleTypeDescription;
+    @Size(max = 3)
+    private String cdvehimarc;
 
-    @Size(max = 5)
-    private String vehicleBrand;
+    @Size(max = 6)
+    private String cdvehimode;
 
-    private String vehicleBrandDescription;
+    private Integer nmcilindcc;
+    private BigDecimal ptdeclarad;
+    private BigDecimal ptcomproba;
+    private BigDecimal pctitulari;
 
-    @Size(max = 10)
-    private String vehicleModel;
+    @Size(max = 200)
+    private String tlobservac;
 
-    private String vehicleModelDescription;
-
-    @Positive(message = "Engine displacement must be positive")
-    private Integer engineDisplacement;
-
-    @Positive(message = "Declared value must be positive")
-    private BigDecimal declaredValue;
-
-    @Positive(message = "Verified value must be positive")
-    private BigDecimal verifiedValue;
-
-    @Min(value = 0, message = "Ownership percentage must be at least 0")
-    @Max(value = 100, message = "Ownership percentage cannot exceed 100")
-    private BigDecimal ownershipPercentage;
-
-    private Date catalogDate;
-
-    @Size(max = 500)
-    private String observations;
-
-    private BigDecimal calculatedVerifiedValue;
+    private String dsvehitipo;
+    private String dsvehimarc;
+    private String dsabrevModelo;
 
     public VehicleDTO() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public Date getRegistrationDate() {
-        return registrationDate;
+    public LocalDate getFcmatricul() {
+        return fcmatricul;
     }
 
-    public void setRegistrationDate(Date registrationDate) {
-        this.registrationDate = registrationDate;
+    public void setFcmatricul(LocalDate fcmatricul) {
+        this.fcmatricul = fcmatricul;
     }
 
-    public String getVehicleType() {
-        return vehicleType;
+    public LocalDate getFcvehicata() {
+        return fcvehicata;
     }
 
-    public void setVehicleType(String vehicleType) {
-        this.vehicleType = vehicleType;
+    public void setFcvehicata(LocalDate fcvehicata) {
+        this.fcvehicata = fcvehicata;
     }
 
-    public String getVehicleTypeDescription() {
-        return vehicleTypeDescription;
+    public String getCdvehitipo() {
+        return cdvehitipo;
     }
 
-    public void setVehicleTypeDescription(String vehicleTypeDescription) {
-        this.vehicleTypeDescription = vehicleTypeDescription;
+    public void setCdvehitipo(String cdvehitipo) {
+        this.cdvehitipo = cdvehitipo;
     }
 
-    public String getVehicleBrand() {
-        return vehicleBrand;
+    public String getCdvehimarc() {
+        return cdvehimarc;
     }
 
-    public void setVehicleBrand(String vehicleBrand) {
-        this.vehicleBrand = vehicleBrand;
+    public void setCdvehimarc(String cdvehimarc) {
+        this.cdvehimarc = cdvehimarc;
     }
 
-    public String getVehicleBrandDescription() {
-        return vehicleBrandDescription;
+    public String getCdvehimode() {
+        return cdvehimode;
     }
 
-    public void setVehicleBrandDescription(String vehicleBrandDescription) {
-        this.vehicleBrandDescription = vehicleBrandDescription;
+    public void setCdvehimode(String cdvehimode) {
+        this.cdvehimode = cdvehimode;
     }
 
-    public String getVehicleModel() {
-        return vehicleModel;
+    public Integer getNmcilindcc() {
+        return nmcilindcc;
     }
 
-    public void setVehicleModel(String vehicleModel) {
-        this.vehicleModel = vehicleModel;
+    public void setNmcilindcc(Integer nmcilindcc) {
+        this.nmcilindcc = nmcilindcc;
     }
 
-    public String getVehicleModelDescription() {
-        return vehicleModelDescription;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setVehicleModelDescription(String vehicleModelDescription) {
-        this.vehicleModelDescription = vehicleModelDescription;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public Integer getEngineDisplacement() {
-        return engineDisplacement;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setEngineDisplacement(Integer engineDisplacement) {
-        this.engineDisplacement = engineDisplacement;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPctitulari() {
+        return pctitulari;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPctitulari(BigDecimal pctitulari) {
+        this.pctitulari = pctitulari;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public String getTlobservac() {
+        return tlobservac;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
     }
 
-    public BigDecimal getOwnershipPercentage() {
-        return ownershipPercentage;
+    public String getDsvehitipo() {
+        return dsvehitipo;
     }
 
-    public void setOwnershipPercentage(BigDecimal ownershipPercentage) {
-        this.ownershipPercentage = ownershipPercentage;
+    public void setDsvehitipo(String dsvehitipo) {
+        this.dsvehitipo = dsvehitipo;
     }
 
-    public Date getCatalogDate() {
-        return catalogDate;
+    public String getDsvehimarc() {
+        return dsvehimarc;
     }
 
-    public void setCatalogDate(Date catalogDate) {
-        this.catalogDate = catalogDate;
+    public void setDsvehimarc(String dsvehimarc) {
+        this.dsvehimarc = dsvehimarc;
     }
 
-    public String getObservations() {
-        return observations;
+    public String getDsabrevModelo() {
+        return dsabrevModelo;
     }
 
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public BigDecimal getCalculatedVerifiedValue() {
-        return calculatedVerifiedValue;
-    }
-
-    public void setCalculatedVerifiedValue(BigDecimal calculatedVerifiedValue) {
-        this.calculatedVerifiedValue = calculatedVerifiedValue;
+    public void setDsabrevModelo(String dsabrevModelo) {
+        this.dsabrevModelo = dsabrevModelo;
     }
 }

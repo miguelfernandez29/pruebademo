@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${title}">Urban Properties</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">GTLIA20900</a>
+            <div class="navbar-nav">
+                <a class="nav-link" href="/assets">Assets</a>
+                <a class="nav-link active" href="/urban-properties">Urban Properties</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Urban Properties</h2>
+        
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <span th:text="${successMessage}"></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <table class="table table-striped table-hover">
+            <thead class="table-dark">
+                <tr>
+                    <th>Sequence</th>
+                    <th>Province</th>
+                    <th>Municipality</th>
+                    <th>Cadastral Ref</th>
+                    <th>Declared Value</th>
+                    <th>Verified Value</th>
+                    <th>Conformity</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="property : ${properties}">
+                    <td th:text="${property.assetSequence}"></td>
+                    <td th:text="${property.provinceName != null ? property.provinceName : property.provinceCode}"></td>
+                    <td th:text="${property.municipalityName != null ? property.municipalityName : property.municipalityCode}"></td>
+                    <td th:text="${property.cadastralReference}"></td>
+                    <td th:text="${property.declaredValue != null ? #numbers.formatDecimal(property.declaredValue, 1, 2) : '-'}"></td>
+                    <td th:text="${property.verifiedValue != null ? #numbers.formatDecimal(property.verifiedValue, 1, 2) : '-'}"></td>
+                    <td>
+                        <span th:class="${property.conformityStatus == 'S' ? 'badge bg-success' : (property.conformityStatus == 'N' ? 'badge bg-danger' : 'badge bg-warning')}"
+                              th:text="${property.conformityStatus == 'S' ? 'Conforming' : (property.conformityStatus == 'N' ? 'Non-Conforming' : 'Pending')}"></span>
+                    </td>
+                    <td>
+                        <div class="btn-group btn-group-sm">
+                            <a th:href="@{/urban-properties/view/{y}/{t}/{c}/{s}(y=${property.presentationYear},t=${property.taxType},c=${property.presentationCode},s=${property.assetSequence})}"
+                               class="btn btn-outline-info">View</a>
+                            <a th:href="@{/urban-properties/edit/{y}/{t}/{c}/{s}(y=${property.presentationYear},t=${property.taxType},c=${property.presentationCode},s=${property.assetSequence})}"
+                               class="btn btn-outline-primary">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(properties)}">
+                    <td colspan="8" class="text-center">No urban properties found</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

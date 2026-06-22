@@ -1,293 +1,220 @@
 package com.example.app.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "GATA_BIENACEM")
-@IdClass(BusinessAsset.BusinessAssetId.class)
-public class BusinessAsset {
+@IdClass(AssetDocumentId.class)
+public class BusinessAsset implements Serializable {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
-    private String presentationYear;
+    private String aapresenta;
 
     @Id
     @Column(name = "VFTIPOIMPU", length = 2)
-    private String taxType;
+    private String vftipoimpu;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 10)
-    private String presentationCode;
+    @Column(name = "CDPRESENTA", length = 14)
+    private String cdpresenta;
 
     @Id
     @Column(name = "CDSECUBIEN", length = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
-    @Column(name = "ITACTIEMPR", length = 1)
-    private String businessActivityIndicator;
+    @Column(name = "TLEPIGRAFE", length = 10)
+    private String tlepigrafe;
 
-    @Column(name = "TLEPIGRAFE", length = 100)
-    private String epigraph;
-
-    @Column(name = "DSBIENACEM", length = 200)
-    private String description;
+    @Column(name = "DSBIENACEM", length = 100)
+    private String dsbienacem;
 
     @Column(name = "CDPROVINCI", length = 2)
-    private String provinceCode;
+    private String cdprovinci;
 
     @Column(name = "CDMUNICIPI", length = 3)
-    private String municipalityCode;
+    private String cdmunicipi;
 
-    @Column(name = "CDTIPOVIAP", length = 5)
-    private String streetTypeCode;
+    @Column(name = "CDTIPOVIAP", length = 2)
+    private String cdtipoviap;
 
-    @Column(name = "TLNOMBVIAP", length = 100)
-    private String streetName;
+    @Column(name = "TLNOMBVIAP", length = 50)
+    private String tlnombviap;
 
-    @Column(name = "TLNUMEVIAP", length = 10)
-    private String streetNumber;
+    @Column(name = "TLNUMEVIAP", length = 5)
+    private String tlnumeviap;
 
     @Column(name = "TLCODIPOST", length = 5)
-    private String postalCode;
+    private String tlcodipost;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
-    private BigDecimal declaredValue;
+    private BigDecimal ptdeclarad;
 
     @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
-    private BigDecimal verifiedValue;
+    private BigDecimal ptcomproba;
 
     @Column(name = "PCTITULARI", precision = 5, scale = 2)
-    private BigDecimal ownershipPercentage;
+    private BigDecimal pctitulari;
 
     @Column(name = "ITREDUCCIO", length = 1)
-    private String reductionIndicator;
+    private String itreduccio;
 
     @Column(name = "ITBIENAFEC", length = 1)
-    private String affectedAssetIndicator;
+    private String itbienafec;
 
-    @Column(name = "TLOBSERVAC", length = 500)
-    private String observations;
+    @Column(name = "TLOBSERVAC", length = 200)
+    private String tlobservac;
 
     public BusinessAsset() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getBusinessActivityIndicator() {
-        return businessActivityIndicator;
+    public String getTlepigrafe() {
+        return tlepigrafe;
     }
 
-    public void setBusinessActivityIndicator(String businessActivityIndicator) {
-        this.businessActivityIndicator = businessActivityIndicator;
+    public void setTlepigrafe(String tlepigrafe) {
+        this.tlepigrafe = tlepigrafe;
     }
 
-    public String getEpigraph() {
-        return epigraph;
+    public String getDsbienacem() {
+        return dsbienacem;
     }
 
-    public void setEpigraph(String epigraph) {
-        this.epigraph = epigraph;
+    public void setDsbienacem(String dsbienacem) {
+        this.dsbienacem = dsbienacem;
     }
 
-    public String getDescription() {
-        return description;
+    public String getCdprovinci() {
+        return cdprovinci;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setCdprovinci(String cdprovinci) {
+        this.cdprovinci = cdprovinci;
     }
 
-    public String getProvinceCode() {
-        return provinceCode;
+    public String getCdmunicipi() {
+        return cdmunicipi;
     }
 
-    public void setProvinceCode(String provinceCode) {
-        this.provinceCode = provinceCode;
+    public void setCdmunicipi(String cdmunicipi) {
+        this.cdmunicipi = cdmunicipi;
     }
 
-    public String getMunicipalityCode() {
-        return municipalityCode;
+    public String getCdtipoviap() {
+        return cdtipoviap;
     }
 
-    public void setMunicipalityCode(String municipalityCode) {
-        this.municipalityCode = municipalityCode;
+    public void setCdtipoviap(String cdtipoviap) {
+        this.cdtipoviap = cdtipoviap;
     }
 
-    public String getStreetTypeCode() {
-        return streetTypeCode;
+    public String getTlnombviap() {
+        return tlnombviap;
     }
 
-    public void setStreetTypeCode(String streetTypeCode) {
-        this.streetTypeCode = streetTypeCode;
+    public void setTlnombviap(String tlnombviap) {
+        this.tlnombviap = tlnombviap;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public String getTlnumeviap() {
+        return tlnumeviap;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
+    public void setTlnumeviap(String tlnumeviap) {
+        this.tlnumeviap = tlnumeviap;
     }
 
-    public String getStreetNumber() {
-        return streetNumber;
+    public String getTlcodipost() {
+        return tlcodipost;
     }
 
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
+    public void setTlcodipost(String tlcodipost) {
+        this.tlcodipost = tlcodipost;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPctitulari() {
+        return pctitulari;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setPctitulari(BigDecimal pctitulari) {
+        this.pctitulari = pctitulari;
     }
 
-    public BigDecimal getOwnershipPercentage() {
-        return ownershipPercentage;
+    public String getItreduccio() {
+        return itreduccio;
     }
 
-    public void setOwnershipPercentage(BigDecimal ownershipPercentage) {
-        this.ownershipPercentage = ownershipPercentage;
+    public void setItreduccio(String itreduccio) {
+        this.itreduccio = itreduccio;
     }
 
-    public String getReductionIndicator() {
-        return reductionIndicator;
+    public String getItbienafec() {
+        return itbienafec;
     }
 
-    public void setReductionIndicator(String reductionIndicator) {
-        this.reductionIndicator = reductionIndicator;
+    public void setItbienafec(String itbienafec) {
+        this.itbienafec = itbienafec;
     }
 
-    public String getAffectedAssetIndicator() {
-        return affectedAssetIndicator;
+    public String getTlobservac() {
+        return tlobservac;
     }
 
-    public void setAffectedAssetIndicator(String affectedAssetIndicator) {
-        this.affectedAssetIndicator = affectedAssetIndicator;
-    }
-
-    public String getObservations() {
-        return observations;
-    }
-
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public static class BusinessAssetId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
-
-        public BusinessAssetId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            BusinessAssetId that = (BusinessAssetId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            return result;
-        }
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
     }
 }

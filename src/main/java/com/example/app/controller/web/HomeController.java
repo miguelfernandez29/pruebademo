@@ -9,13 +9,13 @@ public class HomeController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("title", "GTLIA20900 - Asset Management System");
+        model.addAttribute("title", "GTLIA20900 - Gestión de Bienes");
         return "index";
     }
 
     @GetMapping("/menu")
     public String menu(Model model) {
-        model.addAttribute("title", "Main Menu");
+        model.addAttribute("title", "Menú Principal");
         return "menu";
     }
 }

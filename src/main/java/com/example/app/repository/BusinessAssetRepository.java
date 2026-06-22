@@ -1,18 +1,14 @@
 package com.example.app.repository;
 
 import com.example.app.entity.BusinessAsset;
+import com.example.app.entity.AssetDocumentId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
-public interface BusinessAssetRepository extends JpaRepository<BusinessAsset, BusinessAsset.BusinessAssetId> {
-    
-    List<BusinessAsset> findByPresentationYearAndTaxTypeAndPresentationCode(
-            String presentationYear, String taxType, String presentationCode);
-    
-    Optional<BusinessAsset> findByPresentationYearAndTaxTypeAndPresentationCodeAndAssetSequence(
-            String presentationYear, String taxType, String presentationCode, String assetSequence);
+public interface BusinessAssetRepository extends JpaRepository<BusinessAsset, AssetDocumentId> {
+
+    List<BusinessAsset> findByAapresentaAndVftipoimpu AndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
 }

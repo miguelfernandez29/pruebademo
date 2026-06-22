@@ -1,442 +1,486 @@
 package com.example.app.dto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.math.BigDecimal;
 
 public class UrbanPropertyDTO {
 
-    @NotBlank(message = "Presentation year is required")
+    @NotBlank(message = "Año de presentación es obligatorio")
     @Size(max = 4)
-    private String presentationYear;
+    private String aapresenta;
 
-    @NotBlank(message = "Tax type is required")
+    @NotBlank(message = "Tipo de impuesto es obligatorio")
     @Size(max = 2)
-    private String taxType;
+    private String vftipoimpu;
 
-    @NotBlank(message = "Presentation code is required")
-    @Size(max = 10)
-    private String presentationCode;
-
-    @NotBlank(message = "Asset sequence is required")
-    @Size(max = 3)
-    private String assetSequence;
-
-    @NotBlank(message = "Province code is required")
-    @Size(min = 2, max = 2, message = "Province code must be 2 characters")
-    private String provinceCode;
-
-    private String provinceName;
+    @NotBlank(message = "Código de presentación es obligatorio")
+    @Size(max = 14)
+    private String cdpresenta;
 
     @Size(max = 3)
-    private String municipalityCode;
+    private String cdsecubien;
 
-    private String municipalityName;
-
-    @Size(max = 5)
-    private String streetTypeCode;
-
-    @Size(max = 100)
-    private String streetName;
-
-    @Size(max = 10)
-    private String streetNumber;
-
-    @Size(max = 5)
-    @Pattern(regexp = "^[0-9]{5}$", message = "Postal code must be 5 digits")
-    private String postalCode;
+    @NotBlank(message = "Provincia es obligatoria")
+    @Size(max = 2)
+    private String cdprovinci;
 
     @Size(max = 3)
-    private String countryCode;
+    private String cdmunicipi;
+
+    @Size(max = 3)
+    private String cdpais;
 
     @Size(max = 20)
-    private String cadastralReference;
+    private String tlrefecata;
 
     @Size(max = 2)
-    private String propertyType;
-
-    private String propertyTypeDescription;
-
-    @Min(value = 1500, message = "Construction year must be at least 1500")
-    private Integer constructionYear;
+    private String cdtipobien;
 
     @Size(max = 2)
-    private String situationCode;
+    private String cdtipoviap;
 
-    private String situationDescription;
+    @Size(max = 50)
+    private String tlnombviap;
 
-    @Pattern(regexp = "^[SN]$", message = "Rental indicator must be S or N")
-    private String rentalIndicator;
+    @Size(max = 5)
+    private String tlnumeviap;
 
-    private Integer rentalContractYear;
+    @Size(max = 5)
+    private String tlcodipost;
 
-    @Pattern(regexp = "^[SN]$", message = "Official protection indicator must be S or N")
-    private String officialProtectionIndicator;
+    @Size(max = 2)
+    private String tlescalera;
 
-    @Pattern(regexp = "^[SN]$", message = "Disqualification indicator must be S or N")
-    private String disqualificationIndicator;
+    @Size(max = 3)
+    private String tlpiso;
 
-    @Positive(message = "Max sale price must be positive")
-    private BigDecimal maxSalePrice;
+    @Size(max = 3)
+    private String tlpuerta;
 
-    @Pattern(regexp = "^[SN]$", message = "Habitual residence indicator must be S or N")
-    private String habitualResidenceIndicator;
+    @Size(max = 1)
+    private String vfduplicad;
 
-    @Positive(message = "Habitual residence value must be positive")
-    private BigDecimal habitualResidenceValue;
+    @Min(value = 1500, message = "El año de construcción debe ser mayor a 1500")
+    private Integer aaconstruc;
 
-    @Positive(message = "Number of units must be positive")
-    private Integer numberOfUnits;
+    @Size(max = 3)
+    private String cdsituaci1;
 
-    @Positive(message = "Surface area must be positive")
-    private BigDecimal surfaceArea;
+    @Size(max = 2)
+    private String cdsituaci2;
 
-    @Positive(message = "Declared value must be positive")
-    private BigDecimal declaredValue;
+    @Size(max = 1)
+    private String itarrendam;
 
-    @Positive(message = "Verified value must be positive")
-    private BigDecimal verifiedValue;
+    private Integer aacontarre;
 
-    @Min(value = 0, message = "Transmission percentage must be at least 0")
-    @Max(value = 100, message = "Transmission percentage cannot exceed 100")
-    private BigDecimal transmissionPercentage;
+    @Size(max = 1)
+    private String itprotofic;
 
-    @Pattern(regexp = "^[PG]$", message = "Position type must be P or G")
-    private String positionType;
+    @Size(max = 1)
+    private String itdescalif;
 
-    private String referenceValueIndicator;
+    @Size(max = 1)
+    private String itvivihabi;
 
-    private String validReferenceValueIndicator;
+    private BigDecimal ptvivihabi;
 
-    private BigDecimal referenceValue;
+    private Integer nmunidades;
 
-    @Pattern(regexp = "^[DT]$", message = "Duplicate indicator must be D or T")
-    private String duplicateIndicator;
+    private BigDecimal nmsuperfic;
 
-    @Size(max = 500)
-    private String observations;
+    private BigDecimal ptmaxventa;
 
-    private BigDecimal calculatedVerifiedValue;
+    private BigDecimal ptdeclarad;
 
-    private String conformityStatus;
+    private BigDecimal ptcomproba;
+
+    @Min(value = 0, message = "El porcentaje de transmisión no puede ser negativo")
+    @Max(value = 100, message = "El porcentaje de transmisión no puede superar 100")
+    private BigDecimal pctransmis;
+
+    @Size(max = 1)
+    private String cdposbien2;
+
+    @Size(max = 1)
+    private String itvalorref;
+
+    @Size(max = 1)
+    private String itvrvalido;
+
+    @Size(max = 1)
+    private String itvalbdbi;
+
+    private BigDecimal ptvalorref;
+
+    @Size(max = 3)
+    private String cdzonaurba;
+
+    @Size(max = 200)
+    private String tlobservac;
+
+    private String dsprovinci;
+    private String dsmunicipi;
+    private String dstipobien;
+    private String dssituaci2;
+    private String dspais;
 
     public UrbanPropertyDTO() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getProvinceCode() {
-        return provinceCode;
+    public String getCdprovinci() {
+        return cdprovinci;
     }
 
-    public void setProvinceCode(String provinceCode) {
-        this.provinceCode = provinceCode;
+    public void setCdprovinci(String cdprovinci) {
+        this.cdprovinci = cdprovinci;
     }
 
-    public String getProvinceName() {
-        return provinceName;
+    public String getCdmunicipi() {
+        return cdmunicipi;
     }
 
-    public void setProvinceName(String provinceName) {
-        this.provinceName = provinceName;
+    public void setCdmunicipi(String cdmunicipi) {
+        this.cdmunicipi = cdmunicipi;
     }
 
-    public String getMunicipalityCode() {
-        return municipalityCode;
+    public String getCdpais() {
+        return cdpais;
     }
 
-    public void setMunicipalityCode(String municipalityCode) {
-        this.municipalityCode = municipalityCode;
+    public void setCdpais(String cdpais) {
+        this.cdpais = cdpais;
     }
 
-    public String getMunicipalityName() {
-        return municipalityName;
+    public String getTlrefecata() {
+        return tlrefecata;
     }
 
-    public void setMunicipalityName(String municipalityName) {
-        this.municipalityName = municipalityName;
+    public void setTlrefecata(String tlrefecata) {
+        this.tlrefecata = tlrefecata;
     }
 
-    public String getStreetTypeCode() {
-        return streetTypeCode;
+    public String getCdtipobien() {
+        return cdtipobien;
     }
 
-    public void setStreetTypeCode(String streetTypeCode) {
-        this.streetTypeCode = streetTypeCode;
+    public void setCdtipobien(String cdtipobien) {
+        this.cdtipobien = cdtipobien;
     }
 
-    public String getStreetName() {
-        return streetName;
+    public String getCdtipoviap() {
+        return cdtipoviap;
     }
 
-    public void setStreetName(String streetName) {
-        this.streetName = streetName;
+    public void setCdtipoviap(String cdtipoviap) {
+        this.cdtipoviap = cdtipoviap;
     }
 
-    public String getStreetNumber() {
-        return streetNumber;
+    public String getTlnombviap() {
+        return tlnombviap;
     }
 
-    public void setStreetNumber(String streetNumber) {
-        this.streetNumber = streetNumber;
+    public void setTlnombviap(String tlnombviap) {
+        this.tlnombviap = tlnombviap;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public String getTlnumeviap() {
+        return tlnumeviap;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    public void setTlnumeviap(String tlnumeviap) {
+        this.tlnumeviap = tlnumeviap;
     }
 
-    public String getCountryCode() {
-        return countryCode;
+    public String getTlcodipost() {
+        return tlcodipost;
     }
 
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+    public void setTlcodipost(String tlcodipost) {
+        this.tlcodipost = tlcodipost;
     }
 
-    public String getCadastralReference() {
-        return cadastralReference;
+    public String getTlescalera() {
+        return tlescalera;
     }
 
-    public void setCadastralReference(String cadastralReference) {
-        this.cadastralReference = cadastralReference;
+    public void setTlescalera(String tlescalera) {
+        this.tlescalera = tlescalera;
     }
 
-    public String getPropertyType() {
-        return propertyType;
+    public String getTlpiso() {
+        return tlpiso;
     }
 
-    public void setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
+    public void setTlpiso(String tlpiso) {
+        this.tlpiso = tlpiso;
     }
 
-    public String getPropertyTypeDescription() {
-        return propertyTypeDescription;
+    public String getTlpuerta() {
+        return tlpuerta;
     }
 
-    public void setPropertyTypeDescription(String propertyTypeDescription) {
-        this.propertyTypeDescription = propertyTypeDescription;
+    public void setTlpuerta(String tlpuerta) {
+        this.tlpuerta = tlpuerta;
     }
 
-    public Integer getConstructionYear() {
-        return constructionYear;
+    public String getVfduplicad() {
+        return vfduplicad;
     }
 
-    public void setConstructionYear(Integer constructionYear) {
-        this.constructionYear = constructionYear;
+    public void setVfduplicad(String vfduplicad) {
+        this.vfduplicad = vfduplicad;
     }
 
-    public String getSituationCode() {
-        return situationCode;
+    public Integer getAaconstruc() {
+        return aaconstruc;
     }
 
-    public void setSituationCode(String situationCode) {
-        this.situationCode = situationCode;
+    public void setAaconstruc(Integer aaconstruc) {
+        this.aaconstruc = aaconstruc;
     }
 
-    public String getSituationDescription() {
-        return situationDescription;
+    public String getCdsituaci1() {
+        return cdsituaci1;
     }
 
-    public void setSituationDescription(String situationDescription) {
-        this.situationDescription = situationDescription;
+    public void setCdsituaci1(String cdsituaci1) {
+        this.cdsituaci1 = cdsituaci1;
     }
 
-    public String getRentalIndicator() {
-        return rentalIndicator;
+    public String getCdsituaci2() {
+        return cdsituaci2;
     }
 
-    public void setRentalIndicator(String rentalIndicator) {
-        this.rentalIndicator = rentalIndicator;
+    public void setCdsituaci2(String cdsituaci2) {
+        this.cdsituaci2 = cdsituaci2;
     }
 
-    public Integer getRentalContractYear() {
-        return rentalContractYear;
+    public String getItarrendam() {
+        return itarrendam;
     }
 
-    public void setRentalContractYear(Integer rentalContractYear) {
-        this.rentalContractYear = rentalContractYear;
+    public void setItarrendam(String itarrendam) {
+        this.itarrendam = itarrendam;
     }
 
-    public String getOfficialProtectionIndicator() {
-        return officialProtectionIndicator;
+    public Integer getAacontarre() {
+        return aacontarre;
     }
 
-    public void setOfficialProtectionIndicator(String officialProtectionIndicator) {
-        this.officialProtectionIndicator = officialProtectionIndicator;
+    public void setAacontarre(Integer aacontarre) {
+        this.aacontarre = aacontarre;
     }
 
-    public String getDisqualificationIndicator() {
-        return disqualificationIndicator;
+    public String getItprotofic() {
+        return itprotofic;
     }
 
-    public void setDisqualificationIndicator(String disqualificationIndicator) {
-        this.disqualificationIndicator = disqualificationIndicator;
+    public void setItprotofic(String itprotofic) {
+        this.itprotofic = itprotofic;
     }
 
-    public BigDecimal getMaxSalePrice() {
-        return maxSalePrice;
+    public String getItdescalif() {
+        return itdescalif;
     }
 
-    public void setMaxSalePrice(BigDecimal maxSalePrice) {
-        this.maxSalePrice = maxSalePrice;
+    public void setItdescalif(String itdescalif) {
+        this.itdescalif = itdescalif;
     }
 
-    public String getHabitualResidenceIndicator() {
-        return habitualResidenceIndicator;
+    public String getItvivihabi() {
+        return itvivihabi;
     }
 
-    public void setHabitualResidenceIndicator(String habitualResidenceIndicator) {
-        this.habitualResidenceIndicator = habitualResidenceIndicator;
+    public void setItvivihabi(String itvivihabi) {
+        this.itvivihabi = itvivihabi;
     }
 
-    public BigDecimal getHabitualResidenceValue() {
-        return habitualResidenceValue;
+    public BigDecimal getPtvivihabi() {
+        return ptvivihabi;
     }
 
-    public void setHabitualResidenceValue(BigDecimal habitualResidenceValue) {
-        this.habitualResidenceValue = habitualResidenceValue;
+    public void setPtvivihabi(BigDecimal ptvivihabi) {
+        this.ptvivihabi = ptvivihabi;
     }
 
-    public Integer getNumberOfUnits() {
-        return numberOfUnits;
+    public Integer getNmunidades() {
+        return nmunidades;
     }
 
-    public void setNumberOfUnits(Integer numberOfUnits) {
-        this.numberOfUnits = numberOfUnits;
+    public void setNmunidades(Integer nmunidades) {
+        this.nmunidades = nmunidades;
     }
 
-    public BigDecimal getSurfaceArea() {
-        return surfaceArea;
+    public BigDecimal getNmsuperfic() {
+        return nmsuperfic;
     }
 
-    public void setSurfaceArea(BigDecimal surfaceArea) {
-        this.surfaceArea = surfaceArea;
+    public void setNmsuperfic(BigDecimal nmsuperfic) {
+        this.nmsuperfic = nmsuperfic;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPtmaxventa() {
+        return ptmaxventa;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPtmaxventa(BigDecimal ptmaxventa) {
+        this.ptmaxventa = ptmaxventa;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getTransmissionPercentage() {
-        return transmissionPercentage;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setTransmissionPercentage(BigDecimal transmissionPercentage) {
-        this.transmissionPercentage = transmissionPercentage;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public String getPositionType() {
-        return positionType;
+    public BigDecimal getPctransmis() {
+        return pctransmis;
     }
 
-    public void setPositionType(String positionType) {
-        this.positionType = positionType;
+    public void setPctransmis(BigDecimal pctransmis) {
+        this.pctransmis = pctransmis;
     }
 
-    public String getReferenceValueIndicator() {
-        return referenceValueIndicator;
+    public String getCdposbien2() {
+        return cdposbien2;
     }
 
-    public void setReferenceValueIndicator(String referenceValueIndicator) {
-        this.referenceValueIndicator = referenceValueIndicator;
+    public void setCdposbien2(String cdposbien2) {
+        this.cdposbien2 = cdposbien2;
     }
 
-    public String getValidReferenceValueIndicator() {
-        return validReferenceValueIndicator;
+    public String getItvalorref() {
+        return itvalorref;
     }
 
-    public void setValidReferenceValueIndicator(String validReferenceValueIndicator) {
-        this.validReferenceValueIndicator = validReferenceValueIndicator;
+    public void setItvalorref(String itvalorref) {
+        this.itvalorref = itvalorref;
     }
 
-    public BigDecimal getReferenceValue() {
-        return referenceValue;
+    public String getItvrvalido() {
+        return itvrvalido;
     }
 
-    public void setReferenceValue(BigDecimal referenceValue) {
-        this.referenceValue = referenceValue;
+    public void setItvrvalido(String itvrvalido) {
+        this.itvrvalido = itvrvalido;
     }
 
-    public String getDuplicateIndicator() {
-        return duplicateIndicator;
+    public String getItvalbdbi() {
+        return itvalbdbi;
     }
 
-    public void setDuplicateIndicator(String duplicateIndicator) {
-        this.duplicateIndicator = duplicateIndicator;
+    public void setItvalbdbi(String itvalbdbi) {
+        this.itvalbdbi = itvalbdbi;
     }
 
-    public String getObservations() {
-        return observations;
+    public BigDecimal getPtvalorref() {
+        return ptvalorref;
     }
 
-    public void setObservations(String observations) {
-        this.observations = observations;
+    public void setPtvalorref(BigDecimal ptvalorref) {
+        this.ptvalorref = ptvalorref;
     }
 
-    public BigDecimal getCalculatedVerifiedValue() {
-        return calculatedVerifiedValue;
+    public String getCdzonaurba() {
+        return cdzonaurba;
     }
 
-    public void setCalculatedVerifiedValue(BigDecimal calculatedVerifiedValue) {
-        this.calculatedVerifiedValue = calculatedVerifiedValue;
+    public void setCdzonaurba(String cdzonaurba) {
+        this.cdzonaurba = cdzonaurba;
     }
 
-    public String getConformityStatus() {
-        return conformityStatus;
+    public String getTlobservac() {
+        return tlobservac;
     }
 
-    public void setConformityStatus(String conformityStatus) {
-        this.conformityStatus = conformityStatus;
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
+    }
+
+    public String getDsprovinci() {
+        return dsprovinci;
+    }
+
+    public void setDsprovinci(String dsprovinci) {
+        this.dsprovinci = dsprovinci;
+    }
+
+    public String getDsmunicipi() {
+        return dsmunicipi;
+    }
+
+    public void setDsmunicipi(String dsmunicipi) {
+        this.dsmunicipi = dsmunicipi;
+    }
+
+    public String getDstipobien() {
+        return dstipobien;
+    }
+
+    public void setDstipobien(String dstipobien) {
+        this.dstipobien = dstipobien;
+    }
+
+    public String getDssituaci2() {
+        return dssituaci2;
+    }
+
+    public void setDssituaci2(String dssituaci2) {
+        this.dssituaci2 = dssituaci2;
+    }
+
+    public String getDspais() {
+        return dspais;
+    }
+
+    public void setDspais(String dspais) {
+        this.dspais = dspais;
     }
 }

@@ -1,195 +1,133 @@
 package com.example.app.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "GATA_BIENDOCU")
-@IdClass(AssetDocument.AssetDocumentId.class)
-public class AssetDocument {
+@IdClass(AssetDocumentId.class)
+public class AssetDocument implements Serializable {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
-    private String presentationYear;
+    private String aapresenta;
 
     @Id
     @Column(name = "VFTIPOIMPU", length = 2)
-    private String taxType;
+    private String vftipoimpu;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 10)
-    private String presentationCode;
+    @Column(name = "CDPRESENTA", length = 14)
+    private String cdpresenta;
 
     @Id
     @Column(name = "CDSECUBIEN", length = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
     @Column(name = "CDNATBIEN2", length = 1)
-    private String assetNature;
+    private String cdnatbien2;
 
     @Column(name = "CDSECUACEM", length = 3)
-    private String businessAssetSequence;
+    private String cdsecuacem;
 
     @Column(name = "FCCOMPROBA")
-    private Date verificationDate;
+    private LocalDate fccomproba;
 
     @Column(name = "IDCOMPROBA", length = 20)
-    private String verificationId;
+    private String idcomproba;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
-    private BigDecimal declaredValue;
+    private BigDecimal ptdeclarad;
 
     @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
-    private BigDecimal verifiedValue;
+    private BigDecimal ptcomproba;
 
     public AssetDocument() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getAssetNature() {
-        return assetNature;
+    public String getCdnatbien2() {
+        return cdnatbien2;
     }
 
-    public void setAssetNature(String assetNature) {
-        this.assetNature = assetNature;
+    public void setCdnatbien2(String cdnatbien2) {
+        this.cdnatbien2 = cdnatbien2;
     }
 
-    public String getBusinessAssetSequence() {
-        return businessAssetSequence;
+    public String getCdsecuacem() {
+        return cdsecuacem;
     }
 
-    public void setBusinessAssetSequence(String businessAssetSequence) {
-        this.businessAssetSequence = businessAssetSequence;
+    public void setCdsecuacem(String cdsecuacem) {
+        this.cdsecuacem = cdsecuacem;
     }
 
-    public Date getVerificationDate() {
-        return verificationDate;
+    public LocalDate getFccomproba() {
+        return fccomproba;
     }
 
-    public void setVerificationDate(Date verificationDate) {
-        this.verificationDate = verificationDate;
+    public void setFccomproba(LocalDate fccomproba) {
+        this.fccomproba = fccomproba;
     }
 
-    public String getVerificationId() {
-        return verificationId;
+    public String getIdcomproba() {
+        return idcomproba;
     }
 
-    public void setVerificationId(String verificationId) {
-        this.verificationId = verificationId;
+    public void setIdcomproba(String idcomproba) {
+        this.idcomproba = idcomproba;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
-    }
-
-    public static class AssetDocumentId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
-
-        public AssetDocumentId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            AssetDocumentId that = (AssetDocumentId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            return result;
-        }
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 }

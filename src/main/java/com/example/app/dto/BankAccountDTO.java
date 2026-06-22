@@ -1,157 +1,119 @@
 package com.example.app.dto;
 
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 
 public class BankAccountDTO {
 
-    @NotBlank(message = "Presentation year is required")
-    private String presentationYear;
+    @NotBlank(message = "Año de presentación es obligatorio")
+    @Size(max = 4)
+    private String aapresenta;
 
-    @NotBlank(message = "Tax type is required")
-    private String taxType;
+    @NotBlank(message = "Tipo de impuesto es obligatorio")
+    @Size(max = 2)
+    private String vftipoimpu;
 
-    @NotBlank(message = "Presentation code is required")
-    private String presentationCode;
+    @NotBlank(message = "Código de presentación es obligatorio")
+    @Size(max = 14)
+    private String cdpresenta;
 
-    private String assetSequence;
+    @Size(max = 3)
+    private String cdsecubien;
 
-    @NotBlank(message = "Financial institution is required")
-    private String financialInstitution;
+    @Size(max = 50)
+    private String tlentidepo;
 
-    @NotBlank(message = "Account number is required")
-    private String accountNumber;
+    @Size(max = 34)
+    private String tldeposito;
 
-    @DecimalMin(value = "0.00", message = "Transmission percentage must be at least 0")
-    @DecimalMax(value = "100.00", message = "Transmission percentage cannot exceed 100")
-    private BigDecimal transmissionPercentage;
+    private BigDecimal ptdeclarad;
+    private BigDecimal ptcomproba;
+    private BigDecimal pctitulari;
 
-    @NotNull(message = "Declared value is required")
-    @DecimalMin(value = "0.00", message = "Declared value must be positive")
-    @DecimalMax(value = "999999999999.99", message = "Declared value exceeds maximum")
-    private BigDecimal declaredValue;
-
-    @DecimalMax(value = "999999999999.99", message = "Verified value exceeds maximum")
-    private BigDecimal verifiedValue;
-
-    private BigDecimal proportionalVerifiedValue;
-    private String observations;
-    private String assetPosition;
-    private String assetNature;
-    private String assetNatureDescription;
+    @Size(max = 200)
+    private String tlobservac;
 
     public BankAccountDTO() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getFinancialInstitution() {
-        return financialInstitution;
+    public String getTlentidepo() {
+        return tlentidepo;
     }
 
-    public void setFinancialInstitution(String financialInstitution) {
-        this.financialInstitution = financialInstitution;
+    public void setTlentidepo(String tlentidepo) {
+        this.tlentidepo = tlentidepo;
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
+    public String getTldeposito() {
+        return tldeposito;
     }
 
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
+    public void setTldeposito(String tldeposito) {
+        this.tldeposito = tldeposito;
     }
 
-    public BigDecimal getTransmissionPercentage() {
-        return transmissionPercentage;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setTransmissionPercentage(BigDecimal transmissionPercentage) {
-        this.transmissionPercentage = transmissionPercentage;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPctitulari() {
+        return pctitulari;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setPctitulari(BigDecimal pctitulari) {
+        this.pctitulari = pctitulari;
     }
 
-    public BigDecimal getProportionalVerifiedValue() {
-        return proportionalVerifiedValue;
+    public String getTlobservac() {
+        return tlobservac;
     }
 
-    public void setProportionalVerifiedValue(BigDecimal proportionalVerifiedValue) {
-        this.proportionalVerifiedValue = proportionalVerifiedValue;
-    }
-
-    public String getObservations() {
-        return observations;
-    }
-
-    public void setObservations(String observations) {
-        this.observations = observations;
-    }
-
-    public String getAssetPosition() {
-        return assetPosition;
-    }
-
-    public void setAssetPosition(String assetPosition) {
-        this.assetPosition = assetPosition;
-    }
-
-    public String getAssetNature() {
-        return assetNature;
-    }
-
-    public void setAssetNature(String assetNature) {
-        this.assetNature = assetNature;
-    }
-
-    public String getAssetNatureDescription() {
-        return assetNatureDescription;
-    }
-
-    public void setAssetNatureDescription(String assetNatureDescription) {
-        this.assetNatureDescription = assetNatureDescription;
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
     }
 }

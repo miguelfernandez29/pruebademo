@@ -3,58 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Asset Verification System</title>
+    <title th:text="${title}">GTLIA20900 - Asset Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
-            <a class="navbar-brand" href="/">GTLIA20900 - Asset Verification</a>
+            <a class="navbar-brand" href="/">GTLIA20900</a>
             <div class="navbar-nav">
-                <a class="nav-link" href="/menu">Menu</a>
                 <a class="nav-link" href="/assets">Assets</a>
-                <a class="nav-link" href="/swagger-ui.html">API Docs</a>
+                <a class="nav-link" href="/urban-properties">Urban Properties</a>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
         <div class="jumbotron bg-light p-5 rounded">
-            <h1 class="display-4">Asset Verification System</h1>
-            <p class="lead">Tax declaration asset management and verification system.</p>
+            <h1 class="display-4">Asset Management System</h1>
+            <p class="lead">GTLIA20900 - Tax Declaration Asset Management</p>
             <hr class="my-4">
-            <p>This system allows you to manage assets for tax declarations, including urban properties, rustic properties, vehicles, securities, bank accounts, and business assets.</p>
+            <p>Manage assets associated with tax declarations including urban properties, rural properties, business assets, bank accounts, securities, and vehicles.</p>
             <div class="mt-4">
                 <a class="btn btn-primary btn-lg me-2" href="/assets">View Assets</a>
                 <a class="btn btn-secondary btn-lg" href="/swagger-ui.html">API Documentation</a>
             </div>
         </div>
 
-        <div class="row mt-4">
+        <div class="row mt-5">
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
                         <h5 class="card-title">Urban Properties</h5>
-                        <p class="card-text">Manage urban property assets with cadastral reference validation and reference value calculation.</p>
-                        <a href="/assets" class="btn btn-outline-primary">Manage</a>
+                        <p class="card-text">Manage urban property assets with cadastral reference validation and conformity assessment.</p>
+                        <a href="/urban-properties" class="btn btn-outline-primary">Manage</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Rustic Properties</h5>
-                        <p class="card-text">Manage rustic/rural property assets with polygon and plot information.</p>
-                        <a href="/assets" class="btn btn-outline-primary">Manage</a>
+                        <h5 class="card-title">Asset List</h5>
+                        <p class="card-text">View and manage all assets associated with a tax declaration.</p>
+                        <a href="/assets" class="btn btn-outline-primary">View List</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <h5 class="card-title">Other Assets</h5>
-                        <p class="card-text">Manage vehicles, securities, bank accounts, and business assets.</p>
-                        <a href="/assets" class="btn btn-outline-primary">Manage</a>
+                        <h5 class="card-title">API Access</h5>
+                        <p class="card-text">Access the REST API for programmatic asset management.</p>
+                        <a href="/swagger-ui.html" class="btn btn-outline-primary">API Docs</a>
                     </div>
                 </div>
             </div>
@@ -63,7 +62,7 @@
 
     <footer class="footer mt-5 py-3 bg-light">
         <div class="container text-center">
-            <span class="text-muted">GTLIA20900 Asset Verification System</span>
+            <span class="text-muted">GTLIA20900 Asset Management System</span>
         </div>
     </footer>
 

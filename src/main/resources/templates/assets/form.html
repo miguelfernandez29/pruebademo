@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${title}">Asset Form</title>
+    <title th:text="${isNew} ? 'Nuevo Bien' : 'Editar Bien'">Formulario de Bien</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
@@ -11,113 +11,69 @@
         <div class="container">
             <a class="navbar-brand" href="/">GTLIA20900</a>
             <div class="navbar-nav">
-                <a class="nav-link" href="/menu">Menu</a>
-                <a class="nav-link" href="/assets">Assets</a>
+                <a class="nav-link" th:href="@{/assets}">Bienes</a>
             </div>
         </div>
     </nav>
 
     <div class="container mt-4">
-        <h2 th:text="${title}">Asset Form</h2>
-
-        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
             <span th:text="${errorMessage}"></span>
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <form th:action="@{/assets/{action}(action=${action})}" th:object="${asset}" method="post">
-            <input type="hidden" th:field="*{presentationYear}">
-            <input type="hidden" th:field="*{taxType}">
-            <input type="hidden" th:field="*{presentationCode}">
-            <input type="hidden" th:if="${action == 'update'}" th:field="*{assetSequence}">
-
-            <div class="card mb-4">
-                <div class="card-header">Declaration Information</div>
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-3">
-                            <label class="form-label">Presentation Year</label>
-                            <input type="text" class="form-control" th:value="*{presentationYear}" readonly>
-                        </div>
-                        <div class="col-md-3">
-                            <label class="form-label">Tax Type</label>
-                            <input type="text" class="form-control" th:value="*{taxType}" readonly>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Presentation Code</label>
-                            <input type="text" class="form-control" th:value="*{presentationCode}" readonly>
-                        </div>
-                        <div class="col-md-2" th:if="${action == 'update'}">
-                            <label class="form-label">Asset Sequence</label>
-                            <input type="text" class="form-control" th:value="*{assetSequence}" readonly>
-                        </div>
-                    </div>
-                </div>
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0" th:text="${isNew} ? 'Nuevo Bien' : 'Editar Bien'">Formulario</h5>
             </div>
+            <div class="card-body">
+                <form th:action="@{/assets/save}" th:object="${asset}" method="post">
+                    <input type="hidden" th:field="*{aapresenta}">
+                    <input type="hidden" th:field="*{vftipoimpu}">
+                    <input type="hidden" th:field="*{cdpresenta}">
 
-            <div class="card mb-4">
-                <div class="card-header">Asset Information</div>
-                <div class="card-body">
-                    <div class="row g-3">
+                    <div class="row mb-3">
                         <div class="col-md-4">
-                            <label class="form-label">Asset Nature *</label>
-                            <select class="form-select" th:field="*{assetNature}" required>
-                                <option value="">Select...</option>
-                                <option th:each="nature : ${assetNatures}" th:value="${nature.dataCode}" th:text="${nature.abbreviation}"></option>
+                            <label class="form-label">Secuencia Bien *</label>
+                            <input type="text" class="form-control" th:field="*{cdsecubien}" 
+                                   th:readonly="${!isNew}" required>
+                            <div th:if="${#fields.hasErrors('cdsecubien')}" class="text-danger">
+                                <small th:errors="*{cdsecubien}"></small>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Naturaleza *</label>
+                            <select class="form-select" th:field="*{cdnatbien2}" required>
+                                <option value="">Seleccione...</option>
+                                <option th:each="type : ${natureTypes}" 
+                                        th:value="${type.cddatogena}" 
+                                        th:text="${type.dsabrev}"></option>
                             </select>
-                            <div th:if="${#fields.hasErrors('assetNature')}" class="text-danger" th:errors="*{assetNature}"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Asset Position *</label>
-                            <select class="form-select" th:field="*{assetPosition}" required>
-                                <option value="">Select...</option>
-                                <option th:each="position : ${assetPositions}" th:value="${position.dataCode}" th:text="${position.abbreviation}"></option>
-                            </select>
-                            <div th:if="${#fields.hasErrors('assetPosition')}" class="text-danger" th:errors="*{assetPosition}"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Transmission %</label>
-                            <input type="number" class="form-control" th:field="*{transmissionPercentage}" step="0.01" min="0.01" max="100">
-                            <div th:if="${#fields.hasErrors('transmissionPercentage')}" class="text-danger" th:errors="*{transmissionPercentage}"></div>
+                            <div th:if="${#fields.hasErrors('cdnatbien2')}" class="text-danger">
+                                <small th:errors="*{cdnatbien2}"></small>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="card mb-4">
-                <div class="card-header">Valuation</div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-4">
-                            <label class="form-label">Declared Value *</label>
-                            <input type="number" class="form-control" th:field="*{declaredValue}" step="0.01" min="0" required>
-                            <div th:if="${#fields.hasErrors('declaredValue')}" class="text-danger" th:errors="*{declaredValue}"></div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Valor Declarado</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{ptdeclarad}">
                         </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Verified Value</label>
-                            <input type="number" class="form-control" th:field="*{verifiedValue}" step="0.01" min="0">
-                            <div th:if="${#fields.hasErrors('verifiedValue')}" class="text-danger" th:errors="*{verifiedValue}"></div>
-                        </div>
-                        <div class="col-md-4">
-                            <label class="form-label">Reference Value</label>
-                            <input type="number" class="form-control" th:field="*{referenceValue}" step="0.01" min="0" readonly>
+                        <div class="col-md-6">
+                            <label class="form-label">Valor Comprobado</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{ptcomproba}">
                         </div>
                     </div>
-                </div>
-            </div>
 
-            <div class="card mb-4">
-                <div class="card-header">Observations</div>
-                <div class="card-body">
-                    <textarea class="form-control" th:field="*{observations}" rows="3"></textarea>
-                </div>
+                    <div class="d-flex justify-content-between">
+                        <a th:href="@{/assets(aapresenta=${asset.aapresenta}, vftipoimpu=${asset.vftipoimpu}, cdpresenta=${asset.cdpresenta})}" 
+                           class="btn btn-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
             </div>
-
-            <div class="d-flex justify-content-between">
-                <a th:href="@{/assets(presentationYear=${asset.presentationYear}, taxType=${asset.taxType}, presentationCode=${asset.presentationCode})}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Save</button>
-            </div>
-        </form>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

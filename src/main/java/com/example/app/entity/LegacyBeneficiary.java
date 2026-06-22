@@ -1,253 +1,136 @@
 package com.example.app.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "GATA_BIENLEGA")
-@IdClass(LegacyBeneficiary.LegacyBeneficiaryId.class)
-public class LegacyBeneficiary {
+@IdClass(LegacyBeneficiaryId.class)
+public class LegacyBeneficiary implements Serializable {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
-    private String presentationYear;
+    private String aapresenta;
 
     @Id
     @Column(name = "VFTIPOIMPU", length = 2)
-    private String taxType;
+    private String vftipoimpu;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 10)
-    private String presentationCode;
+    @Column(name = "CDPRESENTA", length = 14)
+    private String cdpresenta;
 
     @Id
     @Column(name = "CDSECUBIEN", length = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
     @Id
     @Column(name = "CDNIFCAUSA", length = 9)
-    private String causantNif;
+    private String cdnifcausa;
 
     @Id
     @Column(name = "CDSUBCAUSA", length = 2)
-    private String causantSubcode;
+    private String cdsubcausa;
 
     @Id
     @Column(name = "CDNIFSUPAS", length = 9)
-    private String beneficiaryNif;
+    private String cdnifsupas;
 
     @Id
     @Column(name = "CDSUBSUPAS", length = 2)
-    private String beneficiarySubcode;
-
-    @Column(name = "ITLEGADO", length = 1)
-    private String legacyIndicator;
+    private String cdsubsupas;
 
     @Column(name = "PCLEGADOSP", precision = 5, scale = 2)
-    private BigDecimal legacyPercentage;
+    private BigDecimal pclegadosp;
 
     @Column(name = "CDTPADQUI2", length = 1)
-    private String acquisitionType;
+    private String cdtpadqui2;
 
     public LegacyBeneficiary() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getCausantNif() {
-        return causantNif;
+    public String getCdnifcausa() {
+        return cdnifcausa;
     }
 
-    public void setCausantNif(String causantNif) {
-        this.causantNif = causantNif;
+    public void setCdnifcausa(String cdnifcausa) {
+        this.cdnifcausa = cdnifcausa;
     }
 
-    public String getCausantSubcode() {
-        return causantSubcode;
+    public String getCdsubcausa() {
+        return cdsubcausa;
     }
 
-    public void setCausantSubcode(String causantSubcode) {
-        this.causantSubcode = causantSubcode;
+    public void setCdsubcausa(String cdsubcausa) {
+        this.cdsubcausa = cdsubcausa;
     }
 
-    public String getBeneficiaryNif() {
-        return beneficiaryNif;
+    public String getCdnifsupas() {
+        return cdnifsupas;
     }
 
-    public void setBeneficiaryNif(String beneficiaryNif) {
-        this.beneficiaryNif = beneficiaryNif;
+    public void setCdnifsupas(String cdnifsupas) {
+        this.cdnifsupas = cdnifsupas;
     }
 
-    public String getBeneficiarySubcode() {
-        return beneficiarySubcode;
+    public String getCdsubsupas() {
+        return cdsubsupas;
     }
 
-    public void setBeneficiarySubcode(String beneficiarySubcode) {
-        this.beneficiarySubcode = beneficiarySubcode;
+    public void setCdsubsupas(String cdsubsupas) {
+        this.cdsubsupas = cdsubsupas;
     }
 
-    public String getLegacyIndicator() {
-        return legacyIndicator;
+    public BigDecimal getPclegadosp() {
+        return pclegadosp;
     }
 
-    public void setLegacyIndicator(String legacyIndicator) {
-        this.legacyIndicator = legacyIndicator;
+    public void setPclegadosp(BigDecimal pclegadosp) {
+        this.pclegadosp = pclegadosp;
     }
 
-    public BigDecimal getLegacyPercentage() {
-        return legacyPercentage;
+    public String getCdtpadqui2() {
+        return cdtpadqui2;
     }
 
-    public void setLegacyPercentage(BigDecimal legacyPercentage) {
-        this.legacyPercentage = legacyPercentage;
-    }
-
-    public String getAcquisitionType() {
-        return acquisitionType;
-    }
-
-    public void setAcquisitionType(String acquisitionType) {
-        this.acquisitionType = acquisitionType;
-    }
-
-    public static class LegacyBeneficiaryId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
-        private String causantNif;
-        private String causantSubcode;
-        private String beneficiaryNif;
-        private String beneficiarySubcode;
-
-        public LegacyBeneficiaryId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        public String getCausantNif() {
-            return causantNif;
-        }
-
-        public void setCausantNif(String causantNif) {
-            this.causantNif = causantNif;
-        }
-
-        public String getCausantSubcode() {
-            return causantSubcode;
-        }
-
-        public void setCausantSubcode(String causantSubcode) {
-            this.causantSubcode = causantSubcode;
-        }
-
-        public String getBeneficiaryNif() {
-            return beneficiaryNif;
-        }
-
-        public void setBeneficiaryNif(String beneficiaryNif) {
-            this.beneficiaryNif = beneficiaryNif;
-        }
-
-        public String getBeneficiarySubcode() {
-            return beneficiarySubcode;
-        }
-
-        public void setBeneficiarySubcode(String beneficiarySubcode) {
-            this.beneficiarySubcode = beneficiarySubcode;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            LegacyBeneficiaryId that = (LegacyBeneficiaryId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence) &&
-                   causantNif != null && causantNif.equals(that.causantNif) &&
-                   causantSubcode != null && causantSubcode.equals(that.causantSubcode) &&
-                   beneficiaryNif != null && beneficiaryNif.equals(that.beneficiaryNif) &&
-                   beneficiarySubcode != null && beneficiarySubcode.equals(that.beneficiarySubcode);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            result = 31 * result + (causantNif != null ? causantNif.hashCode() : 0);
-            result = 31 * result + (causantSubcode != null ? causantSubcode.hashCode() : 0);
-            result = 31 * result + (beneficiaryNif != null ? beneficiaryNif.hashCode() : 0);
-            result = 31 * result + (beneficiarySubcode != null ? beneficiarySubcode.hashCode() : 0);
-            return result;
-        }
+    public void setCdtpadqui2(String cdtpadqui2) {
+        this.cdtpadqui2 = cdtpadqui2;
     }
 }

@@ -147,7 +147,7 @@ public class UrbanAssetService {
         }
         String paddedProvince = String.format("%2s", provinceCode).replace(' ', '0');
         String paddedMunicipality = String.format("%3s", municipalityCode).replace(' ', '0');
-        Optional<Municipality> municipality = municipalityRepository.findByProvinceCodeAndCode(paddedProvince, paddedMunicipality);
+        Optional<Municipality> municipality = municipalityRepository.findByProvinceCodeAndMunicipalityCode(paddedProvince, paddedMunicipality);
         if (!municipality.isPresent()) {
             throw new IllegalArgumentException("Invalid municipality code for province");
         }
@@ -330,12 +330,12 @@ public class UrbanAssetService {
 
         if (entity.getProvinceCode() != null) {
             provinceRepository.findById(entity.getProvinceCode())
-                    .ifPresent(p -> dto.setProvinceName(p.getName()));
+                    .ifPresent(p -> dto.setProvinceName(p.getProvinceName()));
         }
 
         if (entity.getProvinceCode() != null && entity.getMunicipalityCode() != null) {
-            municipalityRepository.findByProvinceCodeAndCode(entity.getProvinceCode(), entity.getMunicipalityCode())
-                    .ifPresent(m -> dto.setMunicipalityName(m.getName()));
+            municipalityRepository.findByProvinceCodeAndMunicipalityCode(entity.getProvinceCode(), entity.getMunicipalityCode())
+                    .ifPresent(m -> dto.setMunicipalityName(m.getMunicipalityName()));
         }
 
         if (entity.getCountryCode() != null) {

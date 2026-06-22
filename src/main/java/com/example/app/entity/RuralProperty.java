@@ -1,348 +1,297 @@
 package com.example.app.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
-import javax.persistence.Table;
 import javax.persistence.Column;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "GATA_BIENRUST")
-@IdClass(RuralProperty.RuralPropertyId.class)
-public class RuralProperty {
+@IdClass(AssetDocumentId.class)
+public class RuralProperty implements Serializable {
 
     @Id
     @Column(name = "AAPRESENTA", length = 4)
-    private String presentationYear;
+    private String aapresenta;
 
     @Id
     @Column(name = "VFTIPOIMPU", length = 2)
-    private String taxType;
+    private String vftipoimpu;
 
     @Id
-    @Column(name = "CDPRESENTA", length = 10)
-    private String presentationCode;
+    @Column(name = "CDPRESENTA", length = 14)
+    private String cdpresenta;
 
     @Id
     @Column(name = "CDSECUBIEN", length = 3)
-    private String assetSequence;
+    private String cdsecubien;
 
     @Column(name = "CDPROVINCI", length = 2)
-    private String provinceCode;
+    private String cdprovinci;
 
     @Column(name = "CDMUNICIPI", length = 3)
-    private String municipalityCode;
-
-    @Column(name = "TLCODIPOST", length = 5)
-    private String postalCode;
+    private String cdmunicipi;
 
     @Column(name = "CDPAIS", length = 3)
-    private String countryCode;
+    private String cdpais;
 
-    @Column(name = "TLREFECATA", length = 25)
-    private String cadastralReference;
-
-    @Column(name = "TLPOLIGONO", length = 10)
-    private String polygon;
-
-    @Column(name = "TLPARCELA", length = 10)
-    private String parcel;
-
-    @Column(name = "TLPARAJE", length = 100)
-    private String location;
+    @Column(name = "TLREFECATA", length = 20)
+    private String tlrefecata;
 
     @Column(name = "CDTIPOBIEN", length = 2)
-    private String propertyType;
+    private String cdtipobien;
+
+    @Column(name = "TLCODIPOST", length = 5)
+    private String tlcodipost;
+
+    @Column(name = "TLPOLIGONO", length = 10)
+    private String tlpoligono;
+
+    @Column(name = "TLPARCELA", length = 10)
+    private String tlparcela;
+
+    @Column(name = "TLPARAJE", length = 50)
+    private String tlparaje;
 
     @Column(name = "CDUNIMEDI1", length = 3)
-    private String measurementUnitType;
+    private String cdunimedi1;
 
     @Column(name = "CDUNIMEDI2", length = 2)
-    private String measurementUnit;
+    private String cdunimedi2;
 
     @Column(name = "NMSUPERFIC", precision = 14, scale = 4)
-    private BigDecimal surfaceArea;
+    private BigDecimal nmsuperfic;
 
     @Column(name = "PTDECLARAD", precision = 15, scale = 2)
-    private BigDecimal declaredValue;
+    private BigDecimal ptdeclarad;
 
     @Column(name = "PTCOMPROBA", precision = 15, scale = 2)
-    private BigDecimal verifiedValue;
+    private BigDecimal ptcomproba;
 
     @Column(name = "PCTRANSMIS", precision = 5, scale = 2)
-    private BigDecimal transmissionPercentage;
+    private BigDecimal pctransmis;
 
     @Column(name = "CDPOSBIEN2", length = 1)
-    private String positionType;
+    private String cdposbien2;
 
     @Column(name = "ITVALORREF", length = 1)
-    private String referenceValueIndicator;
+    private String itvalorref;
 
     @Column(name = "ITVRVALIDO", length = 1)
-    private String validReferenceValueIndicator;
+    private String itvrvalido;
+
+    @Column(name = "ITVALBDBI", length = 1)
+    private String itvalbdbi;
 
     @Column(name = "PTVALORREF", precision = 15, scale = 2)
-    private BigDecimal referenceValue;
+    private BigDecimal ptvalorref;
 
-    @Column(name = "TLOBSERVAC", length = 500)
-    private String observations;
+    @Column(name = "TLOBSERVAC", length = 200)
+    private String tlobservac;
 
     public RuralProperty() {
     }
 
-    public String getPresentationYear() {
-        return presentationYear;
+    public String getAapresenta() {
+        return aapresenta;
     }
 
-    public void setPresentationYear(String presentationYear) {
-        this.presentationYear = presentationYear;
+    public void setAapresenta(String aapresenta) {
+        this.aapresenta = aapresenta;
     }
 
-    public String getTaxType() {
-        return taxType;
+    public String getVftipoimpu() {
+        return vftipoimpu;
     }
 
-    public void setTaxType(String taxType) {
-        this.taxType = taxType;
+    public void setVftipoimpu(String vftipoimpu) {
+        this.vftipoimpu = vftipoimpu;
     }
 
-    public String getPresentationCode() {
-        return presentationCode;
+    public String getCdpresenta() {
+        return cdpresenta;
     }
 
-    public void setPresentationCode(String presentationCode) {
-        this.presentationCode = presentationCode;
+    public void setCdpresenta(String cdpresenta) {
+        this.cdpresenta = cdpresenta;
     }
 
-    public String getAssetSequence() {
-        return assetSequence;
+    public String getCdsecubien() {
+        return cdsecubien;
     }
 
-    public void setAssetSequence(String assetSequence) {
-        this.assetSequence = assetSequence;
+    public void setCdsecubien(String cdsecubien) {
+        this.cdsecubien = cdsecubien;
     }
 
-    public String getProvinceCode() {
-        return provinceCode;
+    public String getCdprovinci() {
+        return cdprovinci;
     }
 
-    public void setProvinceCode(String provinceCode) {
-        this.provinceCode = provinceCode;
+    public void setCdprovinci(String cdprovinci) {
+        this.cdprovinci = cdprovinci;
     }
 
-    public String getMunicipalityCode() {
-        return municipalityCode;
+    public String getCdmunicipi() {
+        return cdmunicipi;
     }
 
-    public void setMunicipalityCode(String municipalityCode) {
-        this.municipalityCode = municipalityCode;
+    public void setCdmunicipi(String cdmunicipi) {
+        this.cdmunicipi = cdmunicipi;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public String getCdpais() {
+        return cdpais;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    public void setCdpais(String cdpais) {
+        this.cdpais = cdpais;
     }
 
-    public String getCountryCode() {
-        return countryCode;
+    public String getTlrefecata() {
+        return tlrefecata;
     }
 
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
+    public void setTlrefecata(String tlrefecata) {
+        this.tlrefecata = tlrefecata;
     }
 
-    public String getCadastralReference() {
-        return cadastralReference;
+    public String getCdtipobien() {
+        return cdtipobien;
     }
 
-    public void setCadastralReference(String cadastralReference) {
-        this.cadastralReference = cadastralReference;
+    public void setCdtipobien(String cdtipobien) {
+        this.cdtipobien = cdtipobien;
     }
 
-    public String getPolygon() {
-        return polygon;
+    public String getTlcodipost() {
+        return tlcodipost;
     }
 
-    public void setPolygon(String polygon) {
-        this.polygon = polygon;
+    public void setTlcodipost(String tlcodipost) {
+        this.tlcodipost = tlcodipost;
     }
 
-    public String getParcel() {
-        return parcel;
+    public String getTlpoligono() {
+        return tlpoligono;
     }
 
-    public void setParcel(String parcel) {
-        this.parcel = parcel;
+    public void setTlpoligono(String tlpoligono) {
+        this.tlpoligono = tlpoligono;
     }
 
-    public String getLocation() {
-        return location;
+    public String getTlparcela() {
+        return tlparcela;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
+    public void setTlparcela(String tlparcela) {
+        this.tlparcela = tlparcela;
     }
 
-    public String getPropertyType() {
-        return propertyType;
+    public String getTlparaje() {
+        return tlparaje;
     }
 
-    public void setPropertyType(String propertyType) {
-        this.propertyType = propertyType;
+    public void setTlparaje(String tlparaje) {
+        this.tlparaje = tlparaje;
     }
 
-    public String getMeasurementUnitType() {
-        return measurementUnitType;
+    public String getCdunimedi1() {
+        return cdunimedi1;
     }
 
-    public void setMeasurementUnitType(String measurementUnitType) {
-        this.measurementUnitType = measurementUnitType;
+    public void setCdunimedi1(String cdunimedi1) {
+        this.cdunimedi1 = cdunimedi1;
     }
 
-    public String getMeasurementUnit() {
-        return measurementUnit;
+    public String getCdunimedi2() {
+        return cdunimedi2;
     }
 
-    public void setMeasurementUnit(String measurementUnit) {
-        this.measurementUnit = measurementUnit;
+    public void setCdunimedi2(String cdunimedi2) {
+        this.cdunimedi2 = cdunimedi2;
     }
 
-    public BigDecimal getSurfaceArea() {
-        return surfaceArea;
+    public BigDecimal getNmsuperfic() {
+        return nmsuperfic;
     }
 
-    public void setSurfaceArea(BigDecimal surfaceArea) {
-        this.surfaceArea = surfaceArea;
+    public void setNmsuperfic(BigDecimal nmsuperfic) {
+        this.nmsuperfic = nmsuperfic;
     }
 
-    public BigDecimal getDeclaredValue() {
-        return declaredValue;
+    public BigDecimal getPtdeclarad() {
+        return ptdeclarad;
     }
 
-    public void setDeclaredValue(BigDecimal declaredValue) {
-        this.declaredValue = declaredValue;
+    public void setPtdeclarad(BigDecimal ptdeclarad) {
+        this.ptdeclarad = ptdeclarad;
     }
 
-    public BigDecimal getVerifiedValue() {
-        return verifiedValue;
+    public BigDecimal getPtcomproba() {
+        return ptcomproba;
     }
 
-    public void setVerifiedValue(BigDecimal verifiedValue) {
-        this.verifiedValue = verifiedValue;
+    public void setPtcomproba(BigDecimal ptcomproba) {
+        this.ptcomproba = ptcomproba;
     }
 
-    public BigDecimal getTransmissionPercentage() {
-        return transmissionPercentage;
+    public BigDecimal getPctransmis() {
+        return pctransmis;
     }
 
-    public void setTransmissionPercentage(BigDecimal transmissionPercentage) {
-        this.transmissionPercentage = transmissionPercentage;
+    public void setPctransmis(BigDecimal pctransmis) {
+        this.pctransmis = pctransmis;
     }
 
-    public String getPositionType() {
-        return positionType;
+    public String getCdposbien2() {
+        return cdposbien2;
     }
 
-    public void setPositionType(String positionType) {
-        this.positionType = positionType;
+    public void setCdposbien2(String cdposbien2) {
+        this.cdposbien2 = cdposbien2;
     }
 
-    public String getReferenceValueIndicator() {
-        return referenceValueIndicator;
+    public String getItvalorref() {
+        return itvalorref;
     }
 
-    public void setReferenceValueIndicator(String referenceValueIndicator) {
-        this.referenceValueIndicator = referenceValueIndicator;
+    public void setItvalorref(String itvalorref) {
+        this.itvalorref = itvalorref;
     }
 
-    public String getValidReferenceValueIndicator() {
-        return validReferenceValueIndicator;
+    public String getItvrvalido() {
+        return itvrvalido;
     }
 
-    public void setValidReferenceValueIndicator(String validReferenceValueIndicator) {
-        this.validReferenceValueIndicator = validReferenceValueIndicator;
+    public void setItvrvalido(String itvrvalido) {
+        this.itvrvalido = itvrvalido;
     }
 
-    public BigDecimal getReferenceValue() {
-        return referenceValue;
+    public String getItvalbdbi() {
+        return itvalbdbi;
     }
 
-    public void setReferenceValue(BigDecimal referenceValue) {
-        this.referenceValue = referenceValue;
+    public void setItvalbdbi(String itvalbdbi) {
+        this.itvalbdbi = itvalbdbi;
     }
 
-    public String getObservations() {
-        return observations;
+    public BigDecimal getPtvalorref() {
+        return ptvalorref;
     }
 
-    public void setObservations(String observations) {
-        this.observations = observations;
+    public void setPtvalorref(BigDecimal ptvalorref) {
+        this.ptvalorref = ptvalorref;
     }
 
-    public static class RuralPropertyId implements Serializable {
-        private String presentationYear;
-        private String taxType;
-        private String presentationCode;
-        private String assetSequence;
+    public String getTlobservac() {
+        return tlobservac;
+    }
 
-        public RuralPropertyId() {
-        }
-
-        public String getPresentationYear() {
-            return presentationYear;
-        }
-
-        public void setPresentationYear(String presentationYear) {
-            this.presentationYear = presentationYear;
-        }
-
-        public String getTaxType() {
-            return taxType;
-        }
-
-        public void setTaxType(String taxType) {
-            this.taxType = taxType;
-        }
-
-        public String getPresentationCode() {
-            return presentationCode;
-        }
-
-        public void setPresentationCode(String presentationCode) {
-            this.presentationCode = presentationCode;
-        }
-
-        public String getAssetSequence() {
-            return assetSequence;
-        }
-
-        public void setAssetSequence(String assetSequence) {
-            this.assetSequence = assetSequence;
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (this == o) return true;
-            if (o == null || getClass() != o.getClass()) return false;
-            RuralPropertyId that = (RuralPropertyId) o;
-            return presentationYear != null && presentationYear.equals(that.presentationYear) &&
-                   taxType != null && taxType.equals(that.taxType) &&
-                   presentationCode != null && presentationCode.equals(that.presentationCode) &&
-                   assetSequence != null && assetSequence.equals(that.assetSequence);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = presentationYear != null ? presentationYear.hashCode() : 0;
-            result = 31 * result + (taxType != null ? taxType.hashCode() : 0);
-            result = 31 * result + (presentationCode != null ? presentationCode.hashCode() : 0);
-            result = 31 * result + (assetSequence != null ? assetSequence.hashCode() : 0);
-            return result;
-        }
+    public void setTlobservac(String tlobservac) {
+        this.tlobservac = tlobservac;
     }
 }
