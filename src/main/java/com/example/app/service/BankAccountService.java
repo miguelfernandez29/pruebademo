@@ -28,7 +28,7 @@ public class BankAccountService {
     }
 
     public List<BankAccount> findAllByDeclaration(String aapresenta, String vftipoimpu, String cdpresenta) {
-        return bankAccountRepository.findByAapresentaAndVftipoimpu AndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
+        return bankAccountRepository.findByAapresentaAndVftipoimpuAndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
     }
 
     public Optional<BankAccount> findById(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {

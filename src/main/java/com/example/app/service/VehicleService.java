@@ -28,7 +28,7 @@ public class VehicleService {
     }
 
     public List<Vehicle> findAllByDeclaration(String aapresenta, String vftipoimpu, String cdpresenta) {
-        return vehicleRepository.findByAapresentaAndVftipoimpu AndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
+        return vehicleRepository.findByAapresentaAndVftipoimpuAndCdpresenta(aapresenta, vftipoimpu, cdpresenta);
     }
 
     public Optional<Vehicle> findById(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {

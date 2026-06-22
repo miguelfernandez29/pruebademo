@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface UnlistedSecuritiesRepository extends JpaRepository<UnlistedSecurities, AssetDocumentId> {
 
-    List<UnlistedSecurities> findByAapresentaAndVftipoimpu AndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
+    List<UnlistedSecurities> findByAapresentaAndVftipoimpuAndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
 }
