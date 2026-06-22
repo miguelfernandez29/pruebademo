@@ -17,6 +17,19 @@ public class LegacyBeneficiaryId implements Serializable {
     public LegacyBeneficiaryId() {
     }
 
+    public LegacyBeneficiaryId(String aapresenta, String vftipoimpu, String cdpresenta,
+                               String cdsecubien, String cdnifcausa, String cdsubcausa,
+                               String cdnifsupas, String cdsubsupas) {
+        this.aapresenta = aapresenta;
+        this.vftipoimpu = vftipoimpu;
+        this.cdpresenta = cdpresenta;
+        this.cdsecubien = cdsecubien;
+        this.cdnifcausa = cdnifcausa;
+        this.cdsubcausa = cdsubcausa;
+        this.cdnifsupas = cdnifsupas;
+        this.cdsubsupas = cdsubsupas;
+    }
+
     public String getAapresenta() {
         return aapresenta;
     }
@@ -98,6 +111,7 @@ public class LegacyBeneficiaryId implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(aapresenta, vftipoimpu, cdpresenta, cdsecubien, cdnifcausa, cdsubcausa, cdnifsupas, cdsubsupas);
+        return Objects.hash(aapresenta, vftipoimpu, cdpresenta, cdsecubien,
+                cdnifcausa, cdsubcausa, cdnifsupas, cdsubsupas);
     }
 }
