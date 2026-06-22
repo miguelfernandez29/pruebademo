@@ -1,0 +1,13 @@
+com\example\app\entity\MunicipalityId.class
+com\example\app\entity\OtherAsset.class
+com\example\app\service\UrbanPropertyService.class
+com\example\app\repository\ProvinceRepository.class
+com\example\app\entity\Municipality.class
+com\example\app\repository\UrbanPropertyRepository.class
+com\example\app\repository\MunicipalityRepository.class
+com\example\app\entity\RusticAsset.class
+com\example\app\entity\UrbanProperty.class
+com\example\app\entity\Province.class
+com\example\app\service\ValidationService.class
+com\example\app\entity\AssetDocumentId.class
+com\example\app\dto\UrbanPropertyDTO.class

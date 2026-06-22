@@ -10,5 +10,5 @@ import java.util.List;
 @Repository
 public interface BankAccountRepository extends JpaRepository<BankAccount, AssetDocumentId> {
 
-    List<BankAccount> findByAapresentaAndVftipoimuAndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
+    List<BankAccount> findByAapresentaAndVftipoimpuAndCdpresenta(String aapresenta, String vftipoimpu, String cdpresenta);
 }

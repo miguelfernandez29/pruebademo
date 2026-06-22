@@ -1,5 +1,6 @@
 package com.example.app.service;
 
+import com.example.app.dto.LegacyBeneficiaryDTO;
 import com.example.app.entity.LegacyBeneficiary;
 import com.example.app.entity.LegacyBeneficiaryId;
 import com.example.app.exception.BusinessValidationException;
@@ -11,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LegacyBeneficiaryService {
@@ -25,28 +26,54 @@ public class LegacyBeneficiaryService {
         this.validationService = validationService;
     }
 
-    public List<LegacyBeneficiary> findByAsset(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
-        return legacyBeneficiaryRepository.findByAapresentaAndVftipoimuAndCdpresentaAndCdsecubien(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
+    public List<LegacyBeneficiaryDTO> findByAsset(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
+        List<LegacyBeneficiary> entities = legacyBeneficiaryRepository.findByAapresentaAndVftipoimuAndCdpresentaAndCdsecubien(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
+        return entities.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     @Transactional
-    public LegacyBeneficiary create(LegacyBeneficiary beneficiary) {
+    public LegacyBeneficiaryDTO create(LegacyBeneficiaryDTO dto) {
+        LegacyBeneficiary beneficiary = toEntity(dto);
         validateLegacyBeneficiary(beneficiary);
 
         BigDecimal currentTotal = legacyBeneficiaryRepository.sumLegacyPercentage(
                 beneficiary.getAapresenta(), beneficiary.getVftipoimpu(), beneficiary.getCdpresenta(),
                 beneficiary.getCdsecubien(), beneficiary.getCdnifcausa(), beneficiary.getCdsubcausa());
 
-        BigDecimal newTotal = currentTotal.add(beneficiary.getPclegadosp() != null ? beneficiary.getPclegadosp() : BigDecimal.ZERO);
+        BigDecimal newTotal = (currentTotal != null ? currentTotal : BigDecimal.ZERO)
+                .add(beneficiary.getPclegadosp() != null ? beneficiary.getPclegadosp() : BigDecimal.ZERO);
         if (newTotal.compareTo(new BigDecimal("100")) > 0) {
             throw new BusinessValidationException("La suma de los porcentajes legados no puede superar el 100%.");
         }
 
-        return legacyBeneficiaryRepository.save(beneficiary);
+        LegacyBeneficiary saved = legacyBeneficiaryRepository.save(beneficiary);
+        return toDTO(saved);
     }
 
     @Transactional
-    public void delete(LegacyBeneficiaryId id) {
+    public LegacyBeneficiaryDTO update(LegacyBeneficiaryDTO dto) {
+        LegacyBeneficiaryId id = new LegacyBeneficiaryId(
+                dto.getPresentationYear(), dto.getTaxType(), dto.getPresentationCode(),
+                dto.getAssetSequence(), dto.getCausantNif(), dto.getCausantSubcode(),
+                dto.getBeneficiaryNif(), dto.getBeneficiarySubcode());
+        
+        LegacyBeneficiary existing = legacyBeneficiaryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Beneficiario de legado no existente."));
+        
+        existing.setPclegadosp(dto.getLegacyPercentage());
+        existing.setCdtpadqui2(dto.getAcquisitionType());
+        
+        LegacyBeneficiary saved = legacyBeneficiaryRepository.save(existing);
+        return toDTO(saved);
+    }
+
+    @Transactional
+    public void delete(String presentationYear, String taxType, String presentationCode,
+                       String assetSequence, String causantNif, String causantSubcode,
+                       String beneficiaryNif, String beneficiarySubcode) {
+        LegacyBeneficiaryId id = new LegacyBeneficiaryId(
+                presentationYear, taxType, presentationCode, assetSequence,
+                causantNif, causantSubcode, beneficiaryNif, beneficiarySubcode);
         if (!legacyBeneficiaryRepository.existsById(id)) {
             throw new ResourceNotFoundException("Beneficiario de legado no existente.");
         }
@@ -60,5 +87,35 @@ public class LegacyBeneficiaryService {
         if (beneficiary.getCdnifsupas() == null || beneficiary.getCdnifsupas().trim().isEmpty()) {
             throw new BusinessValidationException("El NIF del beneficiario es obligatorio.");
         }
+    }
+
+    private LegacyBeneficiaryDTO toDTO(LegacyBeneficiary entity) {
+        LegacyBeneficiaryDTO dto = new LegacyBeneficiaryDTO();
+        dto.setPresentationYear(entity.getAapresenta());
+        dto.setTaxType(entity.getVftipoimpu());
+        dto.setPresentationCode(entity.getCdpresenta());
+        dto.setAssetSequence(entity.getCdsecubien());
+        dto.setCausantNif(entity.getCdnifcausa());
+        dto.setCausantSubcode(entity.getCdsubcausa());
+        dto.setBeneficiaryNif(entity.getCdnifsupas());
+        dto.setBeneficiarySubcode(entity.getCdsubsupas());
+        dto.setLegacyPercentage(entity.getPclegadosp());
+        dto.setAcquisitionType(entity.getCdtpadqui2());
+        return dto;
+    }
+
+    private LegacyBeneficiary toEntity(LegacyBeneficiaryDTO dto) {
+        LegacyBeneficiary entity = new LegacyBeneficiary();
+        entity.setAapresenta(dto.getPresentationYear());
+        entity.setVftipoimpu(dto.getTaxType());
+        entity.setCdpresenta(dto.getPresentationCode());
+        entity.setCdsecubien(dto.getAssetSequence());
+        entity.setCdnifcausa(dto.getCausantNif());
+        entity.setCdsubcausa(dto.getCausantSubcode());
+        entity.setCdnifsupas(dto.getBeneficiaryNif());
+        entity.setCdsubsupas(dto.getBeneficiarySubcode());
+        entity.setPclegadosp(dto.getLegacyPercentage());
+        entity.setCdtpadqui2(dto.getAcquisitionType());
+        return entity;
     }
 }
