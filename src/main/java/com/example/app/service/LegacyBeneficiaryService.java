@@ -26,7 +26,7 @@ public class LegacyBeneficiaryService {
     }
 
     public List<LegacyBeneficiary> findByAsset(String aapresenta, String vftipoimpu, String cdpresenta, String cdsecubien) {
-        return legacyBeneficiaryRepository.findByAapresentaAndVftipoimpu AndCdpresentaAndCdsecubien(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
+        return legacyBeneficiaryRepository.findByAapresentaAndVftipoimuAndCdpresentaAndCdsecubien(aapresenta, vftipoimpu, cdpresenta, cdsecubien);
     }
 
     @Transactional
